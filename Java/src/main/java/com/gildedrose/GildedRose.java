@@ -8,72 +8,69 @@ class GildedRose {
     }
 
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-        	///
-//        	if (items[0].name.equals("Conjured Mana Cake")) {
-//             	if (items[0].quality > 0) {
-//             		items[0].quality = items[0].quality - 1;
-//             	}
-//            }   
-            if (!items[i].name.equals("Aged Brie")
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                    	if (items[i].quality>1 && items[i].name.equals("Conjured Mana Cake")) {
-                    		items[i].quality = items[i].quality - 1;
-                    	}
-                        items[i].quality = items[i].quality - 1;
-                    }
-                }
-            } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1;
+		String nombre = items[0].name;
+		Item item = items[0];
+		
+		switch (nombre) {
+		case "Aged Brie":
+			if (item.quality < 50) {
+				item.quality += 1;
+			}
+			item.sellIn-=1;
+			if (item.sellIn<0 && item.quality<50) {
+				item.quality += 1;
+			}
+			break;
 
-                    if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
+		case "Sulfuras, Hand of Ragnaros":
+			break;
 
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
+		case "Backstage passes to a TAFKAL80ETC concert":
+			if (item.quality < 50) {
+				item.quality += 1;
+				if (item.sellIn < 11) {					
+					item.quality = item.quality + 1;					
+				}
 
-            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                items[i].sellIn = items[i].sellIn - 1;
-            }
-
-            if (items[i].sellIn < 0) {
-//            	if (items[0].name.equals("Conjured Mana Cake")) {
-//                 	if (items[0].quality > 0) {
-//                 		items[0].quality = items[0].quality - 1;
-//                 	}
-//                }  
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                            	if (items[i].quality>1 && items[i].name.equals("Conjured Mana Cake")) {
-                            		items[i].quality = items[i].quality - 1;
-                            	}
-                                items[i].quality = items[i].quality - 1;
-                            }
-                        }
-                    } else {
-                        items[i].quality = items[i].quality - items[i].quality;
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1;
-                    }
-                }
-            }
-        }
-    }
+				if (item.sellIn < 6) {					
+					item.quality = item.quality + 1;					
+				}
+			}
+			item.sellIn-=1;
+			if (item.sellIn < 0) {
+				item.quality = 0;
+			}			
+			break;
+			
+		case "Conjured Mana Cake":
+			if (item.quality > 1) {
+				item.quality -= 2;				
+				if (item.sellIn<0) {
+					item.quality-=2;
+				}				
+			}
+			if (item.quality==1) {
+				item.quality=0;
+			}
+			item.sellIn-=1;	
+			break;
+			
+		default:
+			if (item.quality > 0) {
+				item.quality -= 1;
+				if (item.sellIn < 0) {
+					item.quality -= 1;
+				}
+			} else {
+				item.quality=0;
+			}	
+			item.sellIn-=1;
+		}
+	}
 }
+
+
+	    
+	    
+
+
