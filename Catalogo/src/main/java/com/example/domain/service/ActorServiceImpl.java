@@ -3,13 +3,12 @@ package com.example.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.domain.contracts.repository.ActorRepository;
 import com.example.domain.contracts.service.ActorService;
 import com.example.domain.entities.Actor;
+import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
@@ -37,8 +36,16 @@ private ActorRepository dao;
 		if (item == null) {
 			throw new InvalidDataException("El actor no puede ser nulo.");
 		}
-		if (item.getActorId()>0 && dao.existsById(item.getActorId())) {
-			throw new DuplicateKeyException("Ya existe.");
+//		if (item.getFirstName().equals("") || item.getFirstName().isEmpty()
+//				|| item.getLastName().equals("") || item.getLastName().isEmpty()) {
+//			throw new InvalidDataException("Los nombres no pueden ser vacíos.");
+//		}
+//		if (item.getActorId()>0 && dao.existsById(item.getActorId())) {
+//			throw new DuplicateKeyException("Ya existe actor con este id.");
+//		}
+		
+		if (dao.findById(item.getActorId()).isPresent()) {
+			throw new DuplicateKeyException("Ya existe actor con este id.");
 		}
 		return dao.save(item);
 	}

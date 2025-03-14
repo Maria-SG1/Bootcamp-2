@@ -1,13 +1,17 @@
 package com.example.domain.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +20,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DuplicateKeyException;
 
 import com.example.domain.contracts.repository.ActorRepository;
 import com.example.domain.service.ActorServiceImpl;
+import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
@@ -49,7 +53,18 @@ class ActorTest {
 	@Test
 	public void getAll() {		
 		when(ar.findAll()).thenReturn(List.of(mock(Actor.class)));
-		as.getAll();
+		List<Actor> actores = as.getAll();
+		assertNotNull(actores);
+		assertEquals(1, actores.size());
+		verify(ar).findAll(); 
+	}
+	
+	@Test
+	public void getAllVacio() {			
+		when(ar.findAll()).thenReturn(Collections.emptyList());
+		List<Actor> actores = as.getAll();
+		assertNotNull(actores);
+		assertEquals(0, actores.size());
 		verify(ar).findAll(); 
 	}
 	
@@ -57,7 +72,8 @@ class ActorTest {
 	public void getOne() {		
 		var id = 201;	
 		when(ar.findById(id)).thenReturn(Optional.of(mock(Actor.class)));
-		as.getOne(id);
+		Optional<Actor> actor = as.getOne(id);
+		assertTrue(actor.isPresent());
 		verify(ar).findById(id);
 	}
 
@@ -70,17 +86,40 @@ class ActorTest {
 		verify(ar).save(any(Actor.class)); 
 	}
 	
-//	@Test
-//	public void testModificar() throws ItemNotFoundException, InvalidDataException {		
-//		var id = 201;	
-//		when(ar.findById(id)).thenReturn(Optional.of(mock(Actor.class)));
-//		var a = Optional.of(mock(Actor.class)).get();
-//		a.setFirstName("Pepito");
-//		var modifiedActor = as.modify(a);
-//		assertEquals("Pepito", modifiedActor.getFirstName());
-//		verify(ar).save(any(Actor.class)); 
-//		
-//	}
+	@Test
+	public void testAddClaveDuplicada() throws DuplicateKeyException, InvalidDataException {
+		var actor = new Actor(10, "Irene", "Mayorino");
+//		when(ar.findById(10)).thenReturn(Optional.of(ar.findById(10).get()));
+		when(ar.findById(10)).thenReturn(Optional.of(new Actor(10,"Pepito","Perez")));
+		var ex = assertThrows(DuplicateKeyException.class, ()->as.add(actor));
+		assertEquals("Ya existe actor con este id.", ex.getMessage());
+		verify(ar, never()).save(any(Actor.class));
+	}
+	
+	@Test
+	public void testAddInvalidData() throws DuplicateKeyException, InvalidDataException  {
+		var nullex = assertThrows(InvalidDataException.class, ()->as.add(null));
+		assertEquals("El actor no puede ser nulo.", nullex.getMessage());
+//		var actorFN = new Actor(10, "", "Mayorino");
+//		var ex1 = assertThrows(InvalidDataException.class, ()->as.add(actorFN));
+//		assertEquals("Los nombres no pueden ser vacíos.", ex1.getMessage());//		
+//		var actorLN = new Actor(20, "Ana", "");
+//		var ex2 = assertThrows(InvalidDataException.class, ()->as.add(actorLN));
+//		assertEquals("Los nombres no pueden ser vacíos.", ex2.getMessage());	
+		verify(ar, never()).save(any(Actor.class));
+	}
+	
+	@Test
+	public void testModificar() throws ItemNotFoundException, InvalidDataException {		
+		var actor = new Actor(10, "Irene", "Mayorino");
+		when(ar.findById(10)).thenReturn(Optional.of(actor));			
+		actor.setFirstName("Chiara");		
+//		when(as.modify(a)).thenReturn(a);
+		as.modify(actor);		
+		assertEquals("Chiara", actor.getFirstName());
+		verify(ar).save(any(Actor.class)); 		
+	}
+	
 	@Test
 	public void testDeleteActorById() throws ItemNotFoundException {
 		var id = 208;	
@@ -95,8 +134,8 @@ class ActorTest {
 	public void testDeleteActorByIdInexistente() {		
 		var id = 208;	
 		when(ar.findById(id)).thenReturn(Optional.empty());	
-		var thrown = assertThrows(ItemNotFoundException.class, () -> as.deleteById(id));
-		assertEquals("No existe actor con id: " + id, thrown.getMessage());
+		var ex = assertThrows(ItemNotFoundException.class, () -> as.deleteById(id));
+		assertEquals("No existe actor con id: " + id, ex.getMessage());
 	}
 	
 	@Test
