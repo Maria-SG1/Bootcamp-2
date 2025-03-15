@@ -1,18 +1,35 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-/**
- * The persistent class for the film database table.
- * 
- */
 @Entity
 @Table(name="film")
 @NamedQuery(name="Film.findAll", query="SELECT f FROM Film f")
@@ -25,49 +42,68 @@ public class Film implements Serializable {
 	private int filmId;
 
 	@Lob
+	@Size(max = 255)
 	private String description;
 
 	@Column(name="last_update", nullable=false)
+	@NotNull
+	@PastOrPresent
 	private Timestamp lastUpdate;
 
+	@Column(name = "length")
+	@Min(15)
+	@Max(210)
 	private int length;
 
 	@Column(length=1)
+	@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.")
 	private String rating;
 
 	@Column(name="release_year")
+	@NotNull
+	@Min(1920)
+	@Max(2030)
 	private Short releaseYear;
 
 	@Column(name="rental_duration", nullable=false)
+	@NotNull
+	@Min(1)
+	@Max(10)
 	private byte rentalDuration;
 
 	@Column(name="rental_rate", nullable=false, precision=10, scale=2)
+	@NotNull
+	@DecimalMin("0.01")
+	@DecimalMax("1000.00")
 	private BigDecimal rentalRate;
 
 	@Column(name="replacement_cost", nullable=false, precision=10, scale=2)
+	@NotNull
+	@DecimalMin("0.01")
 	private BigDecimal replacementCost;
 
 	@Column(nullable=false, length=128)
+	@NotBlank
+	@Size(max = 100, min = 2)
 	private String title;
 
-	//bi-directional many-to-one association to Language
 	@ManyToOne
 	@JoinColumn(name="language_id", nullable=false)
+	@NotNull
 	private Language languageVO;
 
-	//bi-directional many-to-one association to Language
 	@ManyToOne
 	@JoinColumn(name="original_language_id")
 	private Language language2;
 
-	//bi-directional many-to-one association to FilmActor
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
+	@Valid
 	private List<FilmActor> filmActors;
 
-	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
+	@Valid
 	private List<FilmCategory> filmCategories;	
 
 	public Film() {

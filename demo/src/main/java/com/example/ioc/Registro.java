@@ -7,16 +7,12 @@ import jakarta.annotation.PostConstruct;
 
 @Component
 public class Registro {
-	
-	//@Autowired
-	private Configuracion config;
-	
 	public Registro(Configuracion config) {
-		super();
 		this.config = config;
 	}
-	
 
+	private Configuracion config;
+	
 //	public Registro() {
 //		System.err.println("Registro creado");
 //	}

@@ -2,6 +2,9 @@ package com.example.domain.entities;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.sql.Timestamp;
 
 
@@ -16,19 +19,22 @@ public class FilmCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
+	@NotNull
 	private FilmCategoryPK id;
 
 	@Column(name="last_update", nullable=false)
+	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
+	@PastOrPresent
 	private Timestamp lastUpdate;
 
-	//bi-directional many-to-one association to Category
 	@ManyToOne
 	@JoinColumn(name="category_id", nullable=false, insertable=false, updatable=false)
+	@NotNull
 	private Category category;
 
-	//bi-directional many-to-one association to Film
 	@ManyToOne
 	@JoinColumn(name="film_id", nullable=false, insertable=false, updatable=false)
+	@NotNull
 	private Film film;
 
 	public FilmCategory() {

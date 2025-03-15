@@ -14,12 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-
-/**
- * The persistent class for the actor database table.
- * 
- */
 @Entity
 @Table(name="actor")
 @NamedQuery(name="Actor.findAll", query="SELECT a FROM Actor a")
@@ -32,17 +33,25 @@ public class Actor implements Serializable {
 	private int actorId;
 
 	@Column(name="first_name", nullable=false, length=45)
+	@NotBlank
+	@Size(max = 45, min = 2)
+	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe empezar con mayúscula y contener solo letras")
 	private String firstName;
 
 	@Column(name="last_name", nullable=false, length=45)
+	@NotBlank
+	@Size(max = 45, min = 2)
+	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El apellido debe empezar con mayúscula y contener solo letras")
 	private String lastName;
 	
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
+	@PastOrPresent
 	private Timestamp lastUpdate;
-
-	//bi-directional many-to-one association to FilmActor
+	
 //	@OneToMany(mappedBy="actor", fetch = FetchType.EAGER)
-	@OneToMany(mappedBy="actor")   // fetch = FetchType.LAZY -> @Transactional
+	@OneToMany(mappedBy="actor")  
+	@Valid
 	private List<FilmActor> filmActors;
 
 	public Actor() {

@@ -1,7 +1,11 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 /**
  * The primary key class for the film_category database table.
@@ -13,10 +17,14 @@ public class FilmCategoryPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="film_id", insertable=false, updatable=false, unique=true, nullable=false)
+	@NotNull
+	@Positive
 	private int filmId;
 
 	@Column(name="category_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private byte categoryId;
+	@NotNull
+	@Positive
+	private int categoryId;
 
 	public FilmCategoryPK() {
 	}
@@ -26,10 +34,10 @@ public class FilmCategoryPK implements Serializable {
 	public void setFilmId(int filmId) {
 		this.filmId = filmId;
 	}
-	public byte getCategoryId() {
+	public int getCategoryId() {
 		return this.categoryId;
 	}
-	public void setCategoryId(byte categoryId) {
+	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
 

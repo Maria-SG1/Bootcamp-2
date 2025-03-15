@@ -10,13 +10,14 @@ import org.junit.jupiter.api.Test;
 public class PersonaTest {
 	@Test
 	@Tag("smoke")
-	void test() {
-		var p = new Persona(1, "Pepe", "Pepes");
+	void createPersona() {
+		var p = new Persona(1, "Pepe");
+		
 		assertNotNull(p);
-		assertAll("Constructor",
-				()->assertEquals(1, p.id),
-				()->assertEquals("Pepe", p.nombre, "nombre"),
-				()->assertEquals("Pepes", p.apellido, "apellido")
+		assertAll("Contructor", 
+				() -> assertEquals(1, p.id),
+				() -> assertEquals("Pepe", p.nombre, "nombre"),
+				() -> assertEquals("Pepe", p.apellidos, "apellidos")
 				);
 		assertEquals(1, p.id);
 		assertEquals("Pepe", p.nombre);

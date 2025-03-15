@@ -1,16 +1,22 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-/**
- * The persistent class for the language database table.
- * 
- */
 @Entity
 @Table(name="language")
 @NamedQuery(name="Language.findAll", query="SELECT l FROM Language l")
@@ -23,14 +29,17 @@ public class Language implements Serializable {
 	private int languageId;
 
 	@Column(nullable=false, length=20)
+	@NotBlank
+	@Size(min = 2, max = 15)
+	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe comenzar con mayúscula seguida de letras minúsculas.")
 	private String name;
 
-	//bi-directional many-to-one association to Film
 	@OneToMany(mappedBy="languageVO")
+	@Valid
 	private List<Film> filmsVO;
 
-	//bi-directional many-to-one association to Film
 	@OneToMany(mappedBy="language2")
+	@Valid
 	private List<Film> films2;
 
 	public Language() {

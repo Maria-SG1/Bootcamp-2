@@ -7,14 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data 
-@Component 
-@AllArgsConstructor  
-@NoArgsConstructor
+@Data
+@Component
 @ConfigurationProperties("rango")
 public class Rango {
-	private int min;
-	private int max;
-
-	
-}
+    private int min;
+    private int max;
+    
+ }

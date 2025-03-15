@@ -1,20 +1,23 @@
 package com.example.util;
 
+import com.example.ioc.Repositorio;
+
 public class Factura {
-	Calculadora calc;
-	RepositoryInt r;	
+	Calculadora calculadora;
+	Repositorio repositorio;
 	
-	public Factura(Calculadora calc, RepositoryInt r) {
+	public Factura(Calculadora calculadora, Repositorio repositorio) {
 		super();
-		this.calc = calc;
-		this.r=r;
+		this.calculadora = calculadora;
+		this.repositorio = repositorio;
 	}
 	
-	public double calcTotal(int cantidad, double precio) {
-		return calc.suma(cantidad, precio);
+	public double calcularTotal(int cantidad, int precio) {
+		return calculadora.suma(cantidad, precio);
 	}
 	
 	public void emitir() {
-		r.guardar();
+		//...
+		repositorio.guardar();
 	}
 }
