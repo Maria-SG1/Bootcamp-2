@@ -76,6 +76,15 @@ class ActorTest {
 		assertTrue(actor.isPresent());
 		verify(ar).findById(id);
 	}
+	
+	@Test 
+	public void getOneInexistente() {
+		var id = 1000;
+		when(ar.findById(id)).thenReturn(Optional.empty());
+		Optional<Actor> actor = as.getOne(id);
+		assertTrue(actor.isEmpty());
+		verify(ar).findById(id);
+	}
 
 	@Test
 	public void testAddActor() throws DuplicateKeyException, InvalidDataException {
@@ -100,24 +109,43 @@ class ActorTest {
 	public void testAddInvalidData() throws DuplicateKeyException, InvalidDataException  {
 		var nullex = assertThrows(InvalidDataException.class, ()->as.add(null));
 		assertEquals("El actor no puede ser nulo.", nullex.getMessage());
-//		var actorFN = new Actor(10, "", "Mayorino");
-//		var ex1 = assertThrows(InvalidDataException.class, ()->as.add(actorFN));
-//		assertEquals("Los nombres no pueden ser vacíos.", ex1.getMessage());//		
-//		var actorLN = new Actor(20, "Ana", "");
-//		var ex2 = assertThrows(InvalidDataException.class, ()->as.add(actorLN));
-//		assertEquals("Los nombres no pueden ser vacíos.", ex2.getMessage());	
 		verify(ar, never()).save(any(Actor.class));
 	}
+	
+//	@Test
+//	public void testAddNombreVacio() throws DuplicateKeyException, InvalidDataException  {
+//		var actor = new Actor(0, "", "Apellido");
+//		var ex = assertThrows(InvalidDataException.class, ()->as.add(actor));
+//		assertEquals("El actor no puede ser nulo.", ex.getMessage());
+//		assertEquals("Los nombres no pueden ser vacíos.", ex.getMessage());		
+//		verify(ar, never()).save(any(Actor.class));
+//	}
 	
 	@Test
 	public void testModificar() throws ItemNotFoundException, InvalidDataException {		
 		var actor = new Actor(10, "Irene", "Mayorino");
 		when(ar.findById(10)).thenReturn(Optional.of(actor));			
-		actor.setFirstName("Chiara");		
-//		when(as.modify(a)).thenReturn(a);
+		actor.setFirstName("Chiara");	
 		as.modify(actor);		
 		assertEquals("Chiara", actor.getFirstName());
 		verify(ar).save(any(Actor.class)); 		
+	}
+	
+	@Test
+	public void testModificarInexistente() throws ItemNotFoundException {
+		var actor = new Actor(1000, "Fulano", "Fulanes");
+		when(ar.findById(actor.getActorId())).thenReturn(Optional.empty());
+		var ex = assertThrows(ItemNotFoundException.class, () -> as.modify(actor));
+		assertEquals("No existe actor con id: " + actor.getActorId(), ex.getMessage());
+		verify(ar).findById(actor.getActorId());
+		verify(ar, never()).save(any(Actor.class));
+	}
+	
+	@Test
+	public void testModificalNull() {
+		var ex = assertThrows(InvalidDataException.class, () -> as.modify(null));
+		assertEquals("El actor no puede ser nulo.", ex.getMessage());
+		verify(ar, never()).save(any(Actor.class));
 	}
 	
 	@Test

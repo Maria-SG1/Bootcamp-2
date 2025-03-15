@@ -64,7 +64,7 @@ private ActorRepository dao;
 			a.setFilmActors(item.getFilmActors());
 			return dao.save(a);
 		} else {
-			throw new ItemNotFoundException("No existe actor con este ID.");
+			throw new ItemNotFoundException("No existe actor con id: "+item.getActorId());
 		}	
 	}
 
