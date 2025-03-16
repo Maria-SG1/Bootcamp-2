@@ -9,4 +9,6 @@ import com.example.domain.entities.Film;
 public interface FilmRepository extends JpaRepository<Film, Integer> {
 	List<Film> findByLengthLessThan(int length);
 	List<Film> findByTitleStartingWith(String prefix);
+	
+	<T> List<T> findByFilmIdGreaterThan(int id, Class<T> type);
 }

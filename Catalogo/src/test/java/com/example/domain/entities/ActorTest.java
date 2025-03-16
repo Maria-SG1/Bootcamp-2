@@ -1,6 +1,7 @@
 package com.example.domain.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,9 +12,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -27,8 +31,13 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+
 class ActorTest {
 	
+	private Validator validator;	
 	private ActorRepository ar; 
 	private ActorServiceImpl as; 
 
@@ -43,7 +52,8 @@ class ActorTest {
 	@BeforeEach
 	void setup() throws Exception {
 		ar = mock(ActorRepository.class); 
-		as = new ActorServiceImpl(ar); 
+		as = new ActorServiceImpl(ar); 		
+		validator = Validation.buildDefaultValidatorFactory().getValidator();
 	}
 
 	@AfterEach
@@ -174,8 +184,33 @@ class ActorTest {
 		doNothing().when(ar).delete(actor);	
 		as.delete(actor);		
 		verify(ar).delete(actor);
+	}	
+	
+	@Test
+	public void testNombreVacio() {
+		Actor a = new Actor(0, "", "Apellido");
+		Set<ConstraintViolation<Actor>> violations = validator.validate(a);		
+		assertFalse(violations.isEmpty());			
 	}
 	
+	@Test
+	public void testNombreInvalido() {
+		Actor a = new Actor(0, "nombre", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
+		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
+		for (ConstraintViolation<Actor> violation: violations) {
+			System.out.println("Property path "+violation.getPropertyPath());
+			System.out.println("Message "+violation.getMessage());
+			System.out.println("Invalid value "+violation.getInvalidValue());
+		}	
+		assertFalse(violations.isEmpty());				
+		assertTrue(violations.iterator().next().getMessage().contains("debe empezar con mayúscula"));
+	}
 	
+	@Test
+	public void testNombreValido() {
+		Actor a = new Actor(0, "Nombre", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
+		Set<ConstraintViolation<Actor>> violations = validator.validate(a);			
+		assertTrue(violations.isEmpty());
+	}
 
 }

@@ -1,7 +1,11 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
+
+import com.example.domain.core.entities.AbstractEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -10,7 +14,7 @@ import jakarta.validation.constraints.Positive;
  * 
  */
 @Embeddable
-public class FilmActorPK implements Serializable {
+public class FilmActorPK  extends AbstractEntity<Actor> implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 

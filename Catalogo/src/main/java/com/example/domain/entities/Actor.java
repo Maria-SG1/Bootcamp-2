@@ -1,10 +1,13 @@
 package com.example.domain.entities;
 
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.example.domain.core.entities.AbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +27,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name="actor")
 @NamedQuery(name="Actor.findAll", query="SELECT a FROM Actor a")
-public class Actor implements Serializable {
+public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -65,6 +68,21 @@ public class Actor implements Serializable {
 		this.filmActors = new ArrayList<>();
 	}
 	
+	
+	
+	public Actor(int actorId,
+			@NotBlank @Size(max = 45, min = 2) @Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe empezar con mayúscula y contener solo letras") String firstName,
+			@NotBlank @Size(max = 45, min = 2) @Pattern(regexp = "^[A-Z][a-z]+$", message = "El apellido debe empezar con mayúscula y contener solo letras") String lastName,
+			@NotNull(message = "La fecha de la última actualización no puede ser nula.") @PastOrPresent Timestamp lastUpdate,
+			@Valid List<FilmActor> filmActors) {
+		super();
+		this.actorId = actorId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.lastUpdate = lastUpdate;
+		this.filmActors = filmActors;
+	}
+
 	public Actor(int actorId) {
 		super();
 		this.actorId = actorId;		

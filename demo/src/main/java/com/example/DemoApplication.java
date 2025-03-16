@@ -76,15 +76,17 @@ public class DemoApplication implements CommandLineRunner {
 //		} else {
 //			System.err.println("No se ha encontrado el actor");
 //		}
-//		 var actor = new Actor(0, null, "12345678Z");
-//		 if(actor.isValid())
-//			 dao.save(actor);
-//		 else {
-//			System.err.println(actor.getErrorsMessage());
-//		}
-//		dao.findAll().forEach(o -> System.err.println(ActorDTO.from(o)));
-//		dao.queryByActorIdGreaterThan(200).forEach(System.err::println);
-//		dao.getByActorIdGreaterThan(200).forEach(o -> System.err.println(o.getId() + " " + o.getNombre()));
+		 var actor = new Actor(0, null, "12345678Z");
+		 if(actor.isValid())
+			 dao.save(actor);
+		 else {
+			System.err.println(actor.getErrorsMessage());
+		}
+		dao.findAll().forEach(o -> System.err.println("** "+ActorDTO.from(o)));		
+		System.out.println("QueryByActor");
+		dao.queryByActorIdGreaterThan(200).forEach(System.err::println);
+		System.out.println("GetByActor");
+		dao.getByActorIdGreaterThan(200).forEach(o -> System.err.println(o.getId() + " " + o.getNombre()));
 		dao.findByActorIdGreaterThan(200).forEach(System.err::println);
 		dao.findByActorIdGreaterThan(200, ActorDTO.class).forEach(System.err::println);
 		dao.findByActorIdGreaterThan(200, ActorShort.class).forEach(o -> System.err.println(o.getId() + " " + o.getNombre()));
