@@ -42,7 +42,7 @@ public class Language  extends AbstractEntity<Actor> implements Serializable {
 
 	@OneToMany(mappedBy="language2")
 	@Valid
-	private List<Film> films2;
+	private List<Film> films2;	
 
 	public Language() {
 	}
@@ -52,6 +52,13 @@ public class Language  extends AbstractEntity<Actor> implements Serializable {
 		this.languageId = languageId;
 		this.films2 = new ArrayList<>();
 		this.filmsVO = new ArrayList<>();
+	}
+	
+	public Language(int languageId,
+			@NotBlank @Size(min = 2, max = 15) @Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe comenzar con mayúscula seguida de letras minúsculas.") String name) {
+		super();
+		this.languageId = languageId;
+		this.name = name;
 	}
 
 	public int getLanguageId() {

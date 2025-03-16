@@ -7,6 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 
 import com.example.domain.contracts.repository.LanguageRepository;
 import com.example.domain.contracts.service.LanguageService;
+import com.example.domain.entities.Category;
 import com.example.domain.entities.Language;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
@@ -31,26 +32,45 @@ public class LanguageServiceImpl implements LanguageService {
 
 	@Override
 	public Language add(Language item) throws DuplicateKeyException, InvalidDataException {
-		// TODO Auto-generated method stub
-		return null;
+		if (item == null) {
+			throw new InvalidDataException("El idioma no puede ser nulo.");
+		}
+		if (item.getLanguageId()>0 && dao.existsById(item.getLanguageId())) {
+			throw new DuplicateKeyException("Ya existe.");
+		}
+		return dao.save(item);
 	}
 
 	@Override
 	public Language modify(Language item) throws ItemNotFoundException, InvalidDataException {
-		// TODO Auto-generated method stub
-		return null;
+		if (item == null) {
+			throw new InvalidDataException("El idioma no puede ser nulo.");
+		}
+		var idioma = dao.findById(item.getLanguageId());
+		if (idioma.isPresent()) {
+			Language lang = idioma.get();
+			lang.setName(item.getName());			
+			return dao.save(lang);
+		} else {
+			throw new ItemNotFoundException("No existe idioma con este ID.");
+		}	
 	}
 
 	@Override
 	public void delete(Language item) throws InvalidDataException {
-		// TODO Auto-generated method stub
+		if (item == null) {
+			throw new InvalidDataException("No puede ser nulo.");
+		}
+		dao.delete(item);
 
 	}
 
 	@Override
 	public void deleteById(Integer id) throws ItemNotFoundException {
-		// TODO Auto-generated method stub
-
+		if (!dao.findById(id).isPresent()) {
+			throw new ItemNotFoundException("No existe categoría con ID: "+id);
+		}
+		dao.deleteById(id);
 	}
 
 }

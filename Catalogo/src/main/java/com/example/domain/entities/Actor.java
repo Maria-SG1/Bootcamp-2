@@ -45,7 +45,7 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	@NotBlank
 	@Size(max = 45, min = 2)
 	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El apellido debe empezar con mayúscula y contener solo letras")
-	private String lastName;
+	private String lastName;	
 	
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
 	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
@@ -66,9 +66,7 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.filmActors = new ArrayList<>();
-	}
-	
-	
+	}	
 	
 	public Actor(int actorId,
 			@NotBlank @Size(max = 45, min = 2) @Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe empezar con mayúscula y contener solo letras") String firstName,
@@ -115,7 +113,7 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	public Timestamp getLastUpdate() {
 		return lastUpdate;
 	}
-
+	
 	public void setLastUpdate(Timestamp lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
@@ -166,11 +164,26 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	}
 	
 	public void jubilate() {
-		// pon active a false y fecha de baja = fecha actual
+		// active a false y fecha de baja = fecha actual 
+//		if (this.isActive()) {
+//			this.setActive(false);
+//			fechaBaja = LocalDate.now();
+//		}
+			
 	}
 
-	public void premios(String premio) {
-		
+	public int premios() {
+		int count = this.getFilmActors().size();
+		int countPremiados = 0;
+//		for (FilmActor fa: this.getFilmActors()) {
+//			System.out.println(fa.getFilm().getTitle());
+//		}
+		System.out.println("Actor: "+ this.toString()+"; Número películas: "+ count);
+		if (count > 30) {
+			System.out.println("Premiado por número de películas > 30.");
+			countPremiados ++;
+		}
+		return countPremiados;
 	}
 
 }

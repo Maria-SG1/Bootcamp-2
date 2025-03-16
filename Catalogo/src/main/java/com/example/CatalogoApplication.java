@@ -66,6 +66,16 @@ public class CatalogoApplication implements CommandLineRunner{
 		 else {
 			System.err.println(actor.getErrorsMessage());
 		}
+		
+		// premios()
+		int totalPremiados = 0;
+		for (Actor a: adao.findAll()) {
+			Actor act = adao.findById(a.getActorId()).orElse(null);
+			if (act != null) 
+				totalPremiados += act.premios();
+		}
+		System.err.println("Número total de premiados: " + totalPremiados);
+		
 		 
 
 	}

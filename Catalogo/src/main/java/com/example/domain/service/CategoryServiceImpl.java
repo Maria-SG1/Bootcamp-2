@@ -66,8 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (!dao.findById(id).isPresent()) {
 			throw new ItemNotFoundException("No existe categoría con ID: "+id);
 		}
-		dao.deleteById(id);
-		
+		dao.deleteById(id);		
 	}
 
 }
