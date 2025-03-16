@@ -2,12 +2,15 @@ package com.example.domain.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.domain.contracts.repository.ActorRepository;
 import com.example.domain.contracts.service.ActorService;
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.FilmActor;
+import com.example.domain.entities.dto.ActorFilmDTO;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
@@ -82,6 +85,21 @@ private ActorRepository dao;
 			throw new ItemNotFoundException("No existe actor con id: "+id);
 		}
 		dao.deleteById(id);
+	}	
+	
+	@Override
+	public ActorFilmDTO getActorsFilms(int id) throws ItemNotFoundException {
+		Actor actor = dao.findById(id).orElse(null);
+		if (actor != null) {
+			List<String> films = actor.getFilmActors().stream()
+					.map(FilmActor::getFilm)
+					.map(film->film.getTitle())
+					.collect(Collectors.toList());	
+			return new ActorFilmDTO(actor.getFirstName() + " " + actor.getLastName(),films);
+		} else {
+			throw new ItemNotFoundException("Actor no encontrado.");
+		}
+		
 	}
 
 }

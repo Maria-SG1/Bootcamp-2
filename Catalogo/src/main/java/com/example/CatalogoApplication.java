@@ -12,6 +12,7 @@ import com.example.domain.entities.Actor;
 import com.example.domain.entities.dto.ActorDTO;
 import com.example.domain.entities.dto.FilmDTO;
 import com.example.domain.entities.dto.FilmShort;
+import com.example.exceptions.ItemNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -77,6 +78,34 @@ public class CatalogoApplication implements CommandLineRunner{
 		System.err.println("Número total de premiados: " + totalPremiados);
 		
 		 
+		System.err.println("Actores con películas from DTO");
+		for (Actor a: adao.findAll()) {
+			Actor act = adao.findById(a.getActorId()).orElse(null);
+			if (act != null) {
+				if (act.getActorId()<10)
+					System.out.println(srv.getActorsFilms(a.getActorId()));
+			}
+				
+		}
+		
+		
+		adao.findAll().stream().filter(act-> {
+//			return act.getFirstName().equals("LAURA");
+			return act.getActorId()>190;
+		}).forEach(act->{
+			Actor a = adao.findById(act.getActorId()).orElse(null);
+			if (a!=null) {
+				try {
+					System.err.println(srv.getActorsFilms(a.getActorId()));
+				} catch (ItemNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+		
 
 	}
 

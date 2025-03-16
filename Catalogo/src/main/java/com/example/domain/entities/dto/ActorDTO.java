@@ -1,5 +1,7 @@
 package com.example.domain.entities.dto;
 
+import java.util.List;
+
 import com.example.domain.entities.Actor;
 
 import lombok.AllArgsConstructor;
@@ -11,8 +13,7 @@ public class ActorDTO {
 	private int actorId;
 //	private String fullName;
 	private String firstName;
-	private String lastName;
-	
+	private String lastName;		
 	
 	public static ActorDTO from(Actor source) {
 		return new ActorDTO(source.getActorId(), source.getFirstName(), source.getLastName());
