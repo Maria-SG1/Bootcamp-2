@@ -3,12 +3,12 @@ package com.example.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.example.domain.contracts.repository.FilmRepository;
 import com.example.domain.contracts.service.FilmService;
 import com.example.domain.entities.Film;
+import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
@@ -36,8 +36,9 @@ public class FilmServiceImpl implements FilmService {
 		if (item == null) {
 			throw new InvalidDataException("El film no puede ser nulo.");
 		}
-		if (item.getFilmId()>0 && dao.existsById(item.getFilmId())) {
-			throw new DuplicateKeyException("Ya existe.");
+		
+		if (dao.findById(item.getFilmId()).isPresent()) {
+			throw new DuplicateKeyException("Ya existe película con este id.");
 		}
 		return dao.save(item);
 	}
@@ -65,7 +66,7 @@ public class FilmServiceImpl implements FilmService {
 			f.setFilmCategories(item.getFilmCategories());
 			return dao.save(item);
 		} else {
-			throw new ItemNotFoundException("No existe film con este ID.");
+			throw new ItemNotFoundException("No existe film con el ID " + item.getFilmId());
 		}	
 	}
 

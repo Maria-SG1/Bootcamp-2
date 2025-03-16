@@ -23,6 +23,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.example.domain.contracts.repository.ActorRepository;
@@ -61,6 +62,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Obtener todos actores")
 	public void getAll() {		
 		when(ar.findAll()).thenReturn(List.of(mock(Actor.class)));
 		List<Actor> actores = as.getAll();
@@ -70,6 +72,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Obtener todos actores vacío")
 	public void getAllVacio() {			
 		when(ar.findAll()).thenReturn(Collections.emptyList());
 		List<Actor> actores = as.getAll();
@@ -79,6 +82,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Buscar actor por id")
 	public void getOne() {		
 		var id = 201;	
 		when(ar.findById(id)).thenReturn(Optional.of(mock(Actor.class)));
@@ -88,6 +92,7 @@ class ActorTest {
 	}
 	
 	@Test 
+	@DisplayName("Buscar actor por id inexistente")
 	public void getOneInexistente() {
 		var id = 1000;
 		when(ar.findById(id)).thenReturn(Optional.empty());
@@ -97,6 +102,7 @@ class ActorTest {
 	}
 
 	@Test
+	@DisplayName("Añadir actor")
 	public void testAddActor() throws DuplicateKeyException, InvalidDataException {
 		var actor = new Actor(0, "Irene", "Mayorino");
 		when(ar.save(any(Actor.class))).thenReturn(actor);
@@ -106,6 +112,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Añadir clave duplicada")
 	public void testAddClaveDuplicada() throws DuplicateKeyException, InvalidDataException {
 		var actor = new Actor(10, "Irene", "Mayorino");
 //		when(ar.findById(10)).thenReturn(Optional.of(ar.findById(10).get()));
@@ -116,6 +123,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Añadir datos inválidos")
 	public void testAddInvalidData() throws DuplicateKeyException, InvalidDataException  {
 		var nullex = assertThrows(InvalidDataException.class, ()->as.add(null));
 		assertEquals("El actor no puede ser nulo.", nullex.getMessage());
@@ -132,6 +140,7 @@ class ActorTest {
 //	}
 	
 	@Test
+	@DisplayName("Modificar actor")
 	public void testModificar() throws ItemNotFoundException, InvalidDataException {		
 		var actor = new Actor(10, "Irene", "Mayorino");
 		when(ar.findById(10)).thenReturn(Optional.of(actor));			
@@ -142,6 +151,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Modificar actor inexistente")
 	public void testModificarInexistente() throws ItemNotFoundException {
 		var actor = new Actor(1000, "Fulano", "Fulanes");
 		when(ar.findById(actor.getActorId())).thenReturn(Optional.empty());
@@ -152,6 +162,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Modificar null")
 	public void testModificalNull() {
 		var ex = assertThrows(InvalidDataException.class, () -> as.modify(null));
 		assertEquals("El actor no puede ser nulo.", ex.getMessage());
@@ -159,6 +170,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Borrar por id")
 	public void testDeleteActorById() throws ItemNotFoundException {
 		var id = 208;	
 		when(ar.findById(id)).thenReturn(Optional.of(mock(Actor.class)));	
@@ -169,6 +181,7 @@ class ActorTest {
 	}
 
 	@Test
+	@DisplayName("Borrar por id inexistente")
 	public void testDeleteActorByIdInexistente() {		
 		var id = 208;	
 		when(ar.findById(id)).thenReturn(Optional.empty());	
@@ -177,6 +190,7 @@ class ActorTest {
 	}
 	
 	@Test
+	@DisplayName("Borrar")
 	public void testDeleteActor() throws InvalidDataException {
 		var id = 208;
 		when(ar.findById(id)).thenReturn(Optional.of(mock(Actor.class)));
@@ -186,6 +200,7 @@ class ActorTest {
 		verify(ar).delete(actor);
 	}	
 	
+	/* Pruebas de validación */
 	@Test
 	public void testNombreVacio() {
 		Actor a = new Actor(0, "", "Apellido");
