@@ -126,44 +126,9 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.filmCategories = new ArrayList<>();
 	}	
 
-	public Film(int filmId, @Size(max = 255) String description, @NotNull @PastOrPresent Timestamp lastUpdate,
-			@Min(15) @Max(210) int length, @NotBlank @Size(max = 128, min = 2) String title) {
-		super();
-		this.filmId = filmId;
-		this.description = description;
-		this.lastUpdate = lastUpdate;
-		this.length = length;
-		this.title = title;
-	}	
-
 	public int getFilmId() {
 		return this.filmId;
 	}
-
-	public Film(int filmId, @Size(max = 255) String description, @NotNull @PastOrPresent Timestamp lastUpdate,
-		@Min(15) @Max(210) int length,
-		@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.") String rating,
-		@NotNull @Min(1920) @Max(2030) Short releaseYear, @NotNull @Min(1) @Max(10) byte rentalDuration,
-		@NotNull @DecimalMin("0.01") @DecimalMax("1000.00") BigDecimal rentalRate,
-		@NotNull @DecimalMin("0.01") BigDecimal replacementCost, @NotBlank @Size(max = 128, min = 2) String title,
-		@NotNull Language languageVO, Language language2, @Valid List<FilmActor> filmActors,
-		@Valid List<FilmCategory> filmCategories) {
-	super();
-	this.filmId = filmId;
-	this.description = description;
-	this.lastUpdate = lastUpdate;
-	this.length = length;
-	this.rating = rating;
-	this.releaseYear = releaseYear;
-	this.rentalDuration = rentalDuration;
-	this.rentalRate = rentalRate;
-	this.replacementCost = replacementCost;
-	this.title = title;
-	this.languageVO = languageVO;
-	this.language2 = language2;
-	this.filmActors = filmActors;
-	this.filmCategories = filmCategories;
-}
 
 	public void setFilmId(int filmId) {
 		this.filmId = filmId;

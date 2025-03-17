@@ -40,6 +40,12 @@ public class FilmActor  extends AbstractEntity<Actor> implements Serializable {
 	private Film film;
 
 	public FilmActor() {
+	}	
+
+	public FilmActor(@NotNull Actor actor, @NotNull Film film) {
+		super();		
+		this.actor = actor;
+		this.film = film;
 	}
 
 	public FilmActorPK getId() {

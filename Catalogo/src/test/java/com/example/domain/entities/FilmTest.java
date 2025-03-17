@@ -12,11 +12,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -25,6 +28,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.example.domain.contracts.repository.FilmRepository;
 import com.example.domain.service.FilmServiceImpl;
@@ -222,9 +228,97 @@ class FilmTest {
 	@Test
 	@DisplayName("Length")
 	public void testLength() {
-		Film f = new Film(0, " ", new Timestamp(System.currentTimeMillis()), 300, "Titulo");
+//		Film f = new Film(0, " ", new Timestamp(System.currentTimeMillis()), 300, "Titulo");
+		Film f = new Film(0, " ");
+		f.setLength(300);
 		Set<ConstraintViolation<Film>> violations = validator.validate(f);
 		assertFalse(violations.isEmpty());	
+	}	
+	
+	@ParameterizedTest
+	@CsvSource({ "15, 0", "210, 0", "100, 0", "14, 1", "211, 1"})
+	public void testLength(int length, int numViolations) {
+		Film f = new Film();
+		f.setLength(length);
+		Set<ConstraintViolation<Film>> violations = validator.validateProperty(f, "length");
+		assertEquals(numViolations, violations.size());
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "1920, 0", "2030, 0", "1919, 1", "2031, 1", "null, 1"})
+	public void testReleaseYear(String releaseYear, int numViolations) {
+		Film f = new Film();
+		if (!"null".equals(releaseYear)) {
+			f.setReleaseYear(Short.valueOf(releaseYear));
+		} else {
+			f.setReleaseYear(null);
+		}
+		Set<ConstraintViolation<Film>> violations = validator.validateProperty(f, "releaseYear");
+		assertEquals(numViolations, violations.size());
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "1, 0", "10, 0", "0, 1", "11, 1", "-1, 1"})
+	public void testRentalDuration(String rentalDuration, int numViolations) {
+		Film f = new Film();
+		f.setRentalDuration(Byte.valueOf(rentalDuration));
+		Set<ConstraintViolation<Film>> violations = validator.validateProperty(f, "rentalDuration");
+		assertEquals(numViolations, violations.size());
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "0.01, 0", "1000.00, 0", "0.00, 1", "1000.01, 1", "null, 1"})
+	public void testRentalRate(String rentalRate, int numViolations) {
+		Film f = new Film();
+		if (!"null".equals(rentalRate)) {
+			f.setRentalRate(new BigDecimal(rentalRate));
+		} else {
+			f.setRentalRate(null);
+		}		
+		Set<ConstraintViolation<Film>> violations = validator.validateProperty(f, "rentalRate");
+		assertEquals(numViolations, violations.size());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "0.01, 0", "500.00, 0", "0.00, 1", "null, 1"})
+	public void testReplacementCost(String replacementCost, int numViolations) {
+		Film f = new Film();
+		if (!"null".equals(replacementCost)) {
+			f.setReplacementCost(new BigDecimal(replacementCost));
+		} else {
+			f.setReplacementCost(null);
+		}		
+		Set<ConstraintViolation<Film>> violations = validator.validateProperty(f, "replacementCost");
+		assertEquals(numViolations, violations.size());
+	}
+	
+	private static Stream<Object[]> datos() {
+		return Stream.of(
+				new Object[] {new Actor(0, "Nombreuno", "Apellidouno"), new Actor(0, "Nombredos", "Apellidodos"), "Nombreuno"},
+				new Object[] {new Category(0, "Categoriauno"), new Category(0, "Categoriados"), "Categoriauno"}
+				);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("datos")
+	public void testFilmCollections(Object item1, Object item2, String resultado) {
+		Film f = new Film(0, "Abc");
+		if (item1 instanceof Actor) {
+			List<FilmActor> coleccion = new ArrayList<>(f.getFilmActors());
+			coleccion.addAll(Arrays.asList(
+					new FilmActor((Actor)item1, new Film(0, "Filmuno")),
+					new FilmActor((Actor)item2, new Film(0, "Filmdos"))));
+			f.setFilmActors(coleccion);
+			assertEquals(resultado, f.getFilmActors().get(0).getActor().getFirstName());
+			
+		} else if (item1 instanceof Category){
+			List<FilmCategory> coleccion = new ArrayList<>(f.getFilmCategories());
+			coleccion.addAll(Arrays.asList(
+					new FilmCategory((Category)item1, new Film(0, "Filmuno")),
+					new FilmCategory((Category)item2, new Film(0, "Filmdos"))));
+			f.setFilmCategories(coleccion);
+			assertEquals(resultado, f.getFilmCategories().get(0).getCategory().getName());
+		}
 	}
 	
 	

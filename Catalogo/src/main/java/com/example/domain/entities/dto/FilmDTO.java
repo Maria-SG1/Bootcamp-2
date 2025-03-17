@@ -3,6 +3,7 @@ package com.example.domain.entities.dto;
 import com.example.domain.entities.Actor;
 import com.example.domain.entities.Film;
 import com.example.domain.entities.Language;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +11,15 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class FilmDTO {
+	@JsonProperty("id")
 	private int filmId;
 	private String title;
 	private String description;
 	private int length;
 	private int releaseYear;
+	@JsonProperty("idioma_original")
 	private Language languageVO;
+	@JsonProperty("idioma_traduccion")
 	private Language language2;
 	
 	public static FilmDTO from(Film source) {

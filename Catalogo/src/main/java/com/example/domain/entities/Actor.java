@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,28 +35,33 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="actor_id", unique=true, nullable=false)
+	@JsonProperty("id")
 	private int actorId;
 
 	@Column(name="first_name", nullable=false, length=45)
 	@NotBlank
 	@Size(max = 45, min = 2)
 	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe empezar con mayúscula y contener solo letras")
+	@JsonProperty("firstName")
 	private String firstName;
 
 	@Column(name="last_name", nullable=false, length=45)
 	@NotBlank
 	@Size(max = 45, min = 2)
 	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El apellido debe empezar con mayúscula y contener solo letras")
+	@JsonProperty("lastName")
 	private String lastName;	
 	
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
 	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
 	@PastOrPresent
+	@JsonIgnore
 	private Timestamp lastUpdate;
 	
 //	@OneToMany(mappedBy="actor", fetch = FetchType.EAGER)
 	@OneToMany(mappedBy="actor")  
 	@Valid
+	@JsonIgnore
 	private List<FilmActor> filmActors;
 
 	public Actor() {

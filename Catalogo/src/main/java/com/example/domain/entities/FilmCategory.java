@@ -43,6 +43,12 @@ public class FilmCategory  extends AbstractEntity<Actor> implements Serializable
 	public FilmCategory() {
 	}
 
+	public FilmCategory(@NotNull Category category, @NotNull Film film) {
+		super();
+		this.category = category;
+		this.film = film;
+	}
+
 	public FilmCategoryPK getId() {
 		return this.id;
 	}
