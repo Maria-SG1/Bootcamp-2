@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.example.domain.contracts.repository.ActorRepository;
+import com.example.domain.entities.dto.ActorFilmDTO;
 import com.example.domain.service.ActorServiceImpl;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
@@ -302,4 +304,47 @@ class ActorTest {
 		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
 		assertFalse(violations.isEmpty());	
 	}
+	
+	@Test
+	void testGetActorsFilmsConFilms() throws ItemNotFoundException { 
+		Actor actor = new Actor();
+		actor.setActorId(1);
+		actor.setFirstName("Pepito");
+		actor.setLastName("Lopez");	
+		Film film1 = new Film();
+		film1.setTitle("Film Uno");
+		Film film2 = new Film();
+		film2.setTitle("Film Dos");	
+		FilmActor fa1 = new FilmActor();
+		fa1.setFilm(film1);
+		FilmActor fa2 = new FilmActor();
+		fa2.setFilm(film2);	
+		actor.setFilmActors(Arrays.asList(fa1, fa2));
+		when(ar.findById(1)).thenReturn(Optional.of(actor)); 
+		ActorFilmDTO result = as.getActorsFilms(1); 
+		assertEquals("Pepito Lopez", result.getFullName());
+		assertEquals(2, result.getFilms().size());
+		assertTrue(result.getFilms().contains("Film Uno"));
+		assertTrue(result.getFilms().contains("Film Dos"));
+	}
+
+	@Test
+	void testGetActorsFilmsFoundSinFilms() throws ItemNotFoundException { 
+		Actor actor = new Actor();
+		actor.setActorId(1);
+		actor.setFirstName("Pepito");
+		actor.setLastName("Lopez");
+		actor.setFilmActors(Collections.emptyList());
+		when(ar.findById(1)).thenReturn(Optional.of(actor));
+		ActorFilmDTO result = as.getActorsFilms(1);
+		assertEquals("Pepito Lopez", result.getFullName());
+		assertTrue(result.getFilms().isEmpty());
+	}
+
+	@Test
+	void testGetActorsFilms_NotFound() { 
+		when(ar.findById(1)).thenReturn(Optional.empty());
+		assertThrows(ItemNotFoundException.class, () -> as.getActorsFilms(1));
+	}
+
 }
