@@ -68,15 +68,6 @@ public class CatalogoApplication implements CommandLineRunner{
 			System.err.println(actor.getErrorsMessage());
 		}
 		
-		
-		// Size
-		var actor1 = new Actor(0, "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Apellido");
-		if(actor1.isValid())
-			 adao.save(actor1);
-		 else {
-			System.err.println(actor1.getErrorsMessage());
-		}
-		
 		// premios()
 		int totalPremiados = 0;
 		for (Actor a: adao.findAll()) {

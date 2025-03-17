@@ -14,7 +14,7 @@ public class FilmDTO {
 	private String title;
 	private String description;
 	private int length;
-	private Short releaseYear;
+	private int releaseYear;
 	private Language languageVO;
 	private Language language2;
 	
