@@ -220,7 +220,33 @@ class ActorTest {
 		assertFalse(violations.isEmpty());				
 		assertTrue(violations.iterator().next().getMessage().contains("debe empezar con mayúscula"));
 	}
+		
+	@Test
+	public void testNombreInvalidoSizeMas45() {
+		Actor a = new Actor(0, "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
+		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
+		for (ConstraintViolation<Actor> violation: violations) {
+			System.out.println("Property path "+violation.getPropertyPath());
+			System.out.println("Message "+violation.getMessage());
+			System.out.println("Invalid value "+violation.getInvalidValue());
+		}	
+		assertFalse(violations.isEmpty());				
+		assertTrue(violations.iterator().next().getMessage().contains("between 2 and 45"));
+	}
 	
+	@Test
+	public void testNombreInvalidoSizeMenos45() {
+		Actor a = new Actor(0, "A", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
+		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
+		for (ConstraintViolation<Actor> violation: violations) {
+			System.out.println("Property path "+violation.getPropertyPath());
+			System.out.println("Message "+violation.getMessage());
+			System.out.println("Invalid value "+violation.getInvalidValue());
+		}	
+		assertFalse(violations.isEmpty());				
+		assertTrue(violations.iterator().next().getMessage().contains("between 2 and 45"));
+	}	
+
 	@Test
 	public void testNombreValido() {
 		Actor a = new Actor(0, "Nombre", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
