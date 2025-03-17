@@ -97,8 +97,7 @@ public class CatalogoApplication implements CommandLineRunner{
 			if (a!=null) {
 				try {
 					System.err.println(srv.getActorsFilms(a.getActorId()));
-				} catch (ItemNotFoundException e) {
-					// TODO Auto-generated catch block
+				} catch (ItemNotFoundException e) {					
 					e.printStackTrace();
 				}
 			}

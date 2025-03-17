@@ -64,11 +64,20 @@ public class Category  extends AbstractEntity<Actor> implements Serializable {
 		this.name = name;
 		this.filmCategories = new ArrayList<>();
 	}
+	
+	public Category(int categoryId,
+			@NotNull(message = "La fecha de la última actualización no puede ser nula.") @PastOrPresent Timestamp lastUpdate,
+			@NotBlank @Size(max = 25, min = 3) @Pattern(regexp = "^[A-Z]*$", message = "El nombre debe estar en mayúsculas") String name) {
+		super();
+		this.categoryId = categoryId;
+		this.lastUpdate = lastUpdate;
+		this.name = name;
+	}
 
 	public int getCategoryId() {
 		return this.categoryId;
 	}
-
+	
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}

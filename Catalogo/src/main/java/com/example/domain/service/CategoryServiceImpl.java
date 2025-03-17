@@ -3,7 +3,7 @@ package com.example.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.dao.DuplicateKeyException;
+import com.example.exceptions.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.example.domain.contracts.repository.CategoryRepository;
@@ -33,8 +33,11 @@ public class CategoryServiceImpl implements CategoryService {
 		if (item == null) {
 			throw new InvalidDataException("La categoría no puede ser nula.");
 		}
-		if (item.getCategoryId()>0 && dao.existsById(item.getCategoryId())) {
-			throw new DuplicateKeyException("Ya existe.");
+//		if (item.getCategoryId()>0 && dao.existsById(item.getCategoryId())) {
+//			throw new DuplicateKeyException("Ya existe.");
+//		}
+		if (dao.findById(item.getCategoryId()).isPresent()) {
+			throw new DuplicateKeyException("Ya existe categoría con este id.");
 		}
 		return dao.save(item);
 	}
@@ -50,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 			c.setName(item.getName());
 			return dao.save(c);
 		} else {
-			throw new ItemNotFoundException("No existe categoría con este ID.");
+			throw new ItemNotFoundException("No existe categoría con este ID."+item.getCategoryId());
 		}	
 	}
 	@Override
@@ -64,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public void deleteById(Integer id) throws ItemNotFoundException {
 		if (!dao.findById(id).isPresent()) {
-			throw new ItemNotFoundException("No existe categoría con ID: "+id);
+			throw new ItemNotFoundException("No existe categoría con ID:"+id);
 		}
 		dao.deleteById(id);		
 	}

@@ -265,7 +265,7 @@ class ActorTest {
 	
 	@Test
 	@DisplayName("Nombre inválido < 2 violación @Size")
-	public void testNombreInvalidoSizeMenos45() {
+	public void testNombreInvalidoSizeMenos2() {
 		Actor a = new Actor(0, "a", "Apellido", new Timestamp(System.currentTimeMillis()), new ArrayList<>());
 		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
 		System.out.println("< 2");
@@ -296,7 +296,7 @@ class ActorTest {
 	}
 	
 	@Test
-	@DisplayName("Violation @")
+	@DisplayName("Violation @NotNull")
 	public void testLastUpdateNullDate() {
 		Actor a = new Actor(0, "Nombre", "Apellido", null, new ArrayList<>());
 		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	

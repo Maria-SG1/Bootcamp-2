@@ -65,24 +65,24 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@NotNull
 	@Min(1920)
 	@Max(2030)
-	private int releaseYear;
+	private Short releaseYear;
 
 	@Column(name="rental_duration", nullable=false)
 	@NotNull
 	@Min(1)
 	@Max(10)
-	private int rentalDuration;
+	private byte rentalDuration;
 
 	@Column(name="rental_rate", nullable=false, precision=10, scale=2)
 	@NotNull
 	@DecimalMin("0.01")
 	@DecimalMax("1000.00")
-	private double rentalRate;
+	private BigDecimal rentalRate;
 
 	@Column(name="replacement_cost", nullable=false, precision=10, scale=2)
 	@NotNull
 	@DecimalMin("0.01")
-	private double replacementCost;
+	private BigDecimal replacementCost;
 
 	@Column(nullable=false, length=128)
 	@NotBlank
@@ -124,8 +124,7 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.title = title;
 		this.filmActors = new ArrayList<>();
 		this.filmCategories = new ArrayList<>();
-	}
-	
+	}	
 
 	public Film(int filmId, @Size(max = 255) String description, @NotNull @PastOrPresent Timestamp lastUpdate,
 			@Min(15) @Max(210) int length, @NotBlank @Size(max = 128, min = 2) String title) {
@@ -135,37 +134,37 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.lastUpdate = lastUpdate;
 		this.length = length;
 		this.title = title;
-	}
-	
-	public Film(int filmId, @Size(max = 255) String description, @NotNull @PastOrPresent Timestamp lastUpdate,
-			@Min(15) @Max(210) int length,
-			@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.") String rating,
-			@NotNull @Min(1920) @Max(2030) Short releaseYear, @NotNull @Min(1) @Max(10) byte rentalDuration,
-			@NotNull @DecimalMin("0.01") @DecimalMax("1000.00") double rentalRate,
-			@NotNull @DecimalMin("0.01") double replacementCost, @NotBlank @Size(max = 128, min = 2) String title,
-			@NotNull Language languageVO, Language language2, @Valid List<FilmActor> filmActors,
-			@Valid List<FilmCategory> filmCategories) {
-		super();
-		this.filmId = filmId;
-		this.description = description;
-		this.lastUpdate = lastUpdate;
-		this.length = length;
-		this.rating = rating;
-		this.releaseYear = releaseYear;
-		this.rentalDuration = rentalDuration;
-		this.rentalRate = rentalRate;
-		this.replacementCost = replacementCost;
-		this.title = title;
-		this.languageVO = languageVO;
-		this.language2 = language2;
-		this.filmActors = filmActors;
-		this.filmCategories = filmCategories;
 	}	
 
 	public int getFilmId() {
 		return this.filmId;
 	}
-	
+
+	public Film(int filmId, @Size(max = 255) String description, @NotNull @PastOrPresent Timestamp lastUpdate,
+		@Min(15) @Max(210) int length,
+		@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.") String rating,
+		@NotNull @Min(1920) @Max(2030) Short releaseYear, @NotNull @Min(1) @Max(10) byte rentalDuration,
+		@NotNull @DecimalMin("0.01") @DecimalMax("1000.00") BigDecimal rentalRate,
+		@NotNull @DecimalMin("0.01") BigDecimal replacementCost, @NotBlank @Size(max = 128, min = 2) String title,
+		@NotNull Language languageVO, Language language2, @Valid List<FilmActor> filmActors,
+		@Valid List<FilmCategory> filmCategories) {
+	super();
+	this.filmId = filmId;
+	this.description = description;
+	this.lastUpdate = lastUpdate;
+	this.length = length;
+	this.rating = rating;
+	this.releaseYear = releaseYear;
+	this.rentalDuration = rentalDuration;
+	this.rentalRate = rentalRate;
+	this.replacementCost = replacementCost;
+	this.title = title;
+	this.languageVO = languageVO;
+	this.language2 = language2;
+	this.filmActors = filmActors;
+	this.filmCategories = filmCategories;
+}
+
 	public void setFilmId(int filmId) {
 		this.filmId = filmId;
 	}
@@ -202,35 +201,35 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.rating = rating;
 	}
 
-	public int getReleaseYear() {
+	public Short getReleaseYear() {
 		return this.releaseYear;
 	}
 
-	public void setReleaseYear(int releaseYear) {
+	public void setReleaseYear(Short releaseYear) {
 		this.releaseYear = releaseYear;
 	}
 
-	public int getRentalDuration() {
+	public byte getRentalDuration() {
 		return this.rentalDuration;
 	}
 
-	public void setRentalDuration(int rentalDuration) {
+	public void setRentalDuration(byte rentalDuration) {
 		this.rentalDuration = rentalDuration;
 	}
 
-	public double getRentalRate() {
+	public BigDecimal getRentalRate() {
 		return this.rentalRate;
 	}
 
-	public void setRentalRate(double rentalRate) {
+	public void setRentalRate(BigDecimal rentalRate) {
 		this.rentalRate = rentalRate;
 	}
 
-	public double getReplacementCost() {
+	public BigDecimal getReplacementCost() {
 		return this.replacementCost;
 	}
 
-	public void setReplacementCost(double replacementCost) {
+	public void setReplacementCost(BigDecimal replacementCost) {
 		this.replacementCost = replacementCost;
 	}
 

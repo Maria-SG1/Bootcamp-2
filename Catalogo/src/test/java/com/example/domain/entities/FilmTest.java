@@ -201,7 +201,7 @@ class FilmTest {
 		
 		@Test
 		@DisplayName("Borrar")
-		public void testDeleteActor() throws InvalidDataException {
+		public void testDeleteFilm() throws InvalidDataException {
 			var id = 208;
 			when(fr.findById(id)).thenReturn(Optional.of(mock(Film.class)));
 			var f=fr.findById(id).get();
@@ -226,6 +226,8 @@ class FilmTest {
 		Set<ConstraintViolation<Film>> violations = validator.validate(f);
 		assertFalse(violations.isEmpty());	
 	}
+	
+	
 	
 
 }
