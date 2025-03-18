@@ -3,7 +3,7 @@ package com.example.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.dao.DuplicateKeyException;
+import com.example.exceptions.DuplicateKeyException;
 
 import com.example.domain.contracts.repository.LanguageRepository;
 import com.example.domain.contracts.service.LanguageService;
@@ -36,7 +36,7 @@ public class LanguageServiceImpl implements LanguageService {
 			throw new InvalidDataException("El idioma no puede ser nulo.");
 		}
 		if (item.getLanguageId()>0 && dao.existsById(item.getLanguageId())) {
-			throw new DuplicateKeyException("Ya existe.");
+			throw new DuplicateKeyException("Ya existe idioma con este id.");
 		}
 		return dao.save(item);
 	}
@@ -52,7 +52,7 @@ public class LanguageServiceImpl implements LanguageService {
 			lang.setName(item.getName());			
 			return dao.save(lang);
 		} else {
-			throw new ItemNotFoundException("No existe idioma con este ID.");
+			throw new ItemNotFoundException("No existe idioma con este ID."+item.getLanguageId());
 		}	
 	}
 
