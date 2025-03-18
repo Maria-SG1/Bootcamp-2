@@ -35,7 +35,7 @@ public class LanguageServiceImpl implements LanguageService {
 		if (item == null) {
 			throw new InvalidDataException("El idioma no puede ser nulo.");
 		}
-		if (item.getLanguageId()>0 && dao.existsById(item.getLanguageId())) {
+		if (dao.findById(item.getLanguageId()).isPresent()) {
 			throw new DuplicateKeyException("Ya existe idioma con este id.");
 		}
 		return dao.save(item);
