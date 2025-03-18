@@ -1,0 +1,10 @@
+<Personas>
+	<Persona>
+		<id>501</id>
+		<nombre>Emmy</nombre>
+		<apellidos>Woolfenden</apellidos>
+		<correo>ewoolfenden0@posterous.com</correo>
+		<sexo>Male</sexo>
+		<ip>236.177.130.232</ip>
+	</Persona>
+</Personas>
