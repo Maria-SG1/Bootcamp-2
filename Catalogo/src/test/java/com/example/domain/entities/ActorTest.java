@@ -346,5 +346,17 @@ class ActorTest {
 		when(ar.findById(1)).thenReturn(Optional.empty());
 		assertThrows(ItemNotFoundException.class, () -> as.getActorsFilms(1));
 	}
+	
+	@Test
+	public void testDeleteActorConPeliculas() {
+		var actor = mock(Actor.class);
+		var filmActor = mock(FilmActor.class);		
+		List<FilmActor> filmActors = new ArrayList<>();
+		filmActors.add(filmActor);
+		when(actor.getFilmActors()).thenReturn(filmActors);
+		var ex = assertThrows(InvalidDataException.class, ()->as.delete(actor));
+		assertEquals("No se puede eliminar un actor que tiene películas asociadas.", ex.getMessage());
+		verify(ar, never()).delete(actor);
+	}
 
 }

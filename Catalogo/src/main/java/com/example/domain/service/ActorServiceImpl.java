@@ -79,6 +79,9 @@ private ActorRepository dao;
 		if (item == null) {
 			throw new InvalidDataException("No puede ser nulo.");
 		}
+		if (item.getFilmActors()!=null && !item.getFilmActors().isEmpty()) {
+			throw new InvalidDataException("No se puede eliminar un actor que tiene películas asociadas.");
+		}
 		dao.delete(item);		
 	}
 

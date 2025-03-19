@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -321,7 +322,16 @@ class FilmTest {
 		}
 	}
 	
-	
+	@Test
+	public void testDeleteFilmConActores() throws ItemNotFoundException, InvalidDataException {
+		var film = mock(Film.class);
+		var filmActor = mock(FilmActor.class);
+		List<FilmActor> filmActors = new ArrayList<>();
+		filmActors.add(filmActor);
+		when(film.getFilmActors()).thenReturn(filmActors);
+		fs.delete(film);
+		verify(fr).delete(film);	
+	}
 	
 
 }
