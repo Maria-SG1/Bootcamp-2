@@ -3,6 +3,10 @@ package com.example.domain.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import com.example.exceptions.DuplicateKeyException;
 
 import com.example.domain.contracts.repository.LanguageRepository;
@@ -71,6 +75,31 @@ public class LanguageServiceImpl implements LanguageService {
 			throw new ItemNotFoundException("No existe categoría con ID: "+id);
 		}
 		dao.deleteById(id);
+	}
+
+	@Override
+	public <T> List<T> getByProjection(Class<T> type) {
+		return dao.findAllBy(type);
+	}
+
+	@Override
+	public <T> Iterable<T> getByProjection(Sort sort, Class<T> type) {
+		return dao.findAllBy(sort, type);
+	}
+
+	@Override
+	public <T> Page<T> getByProjection(Pageable pageable, Class<T> type) {
+		return dao.findAllBy(pageable, type);
+	}
+
+	@Override
+	public Iterable<Language> getAll(Sort sort) {
+		return dao.findAll(sort);
+	}
+
+	@Override
+	public Page<Language> getAll(Pageable pageable) {
+		return dao.findAll(pageable);
 	}
 
 }

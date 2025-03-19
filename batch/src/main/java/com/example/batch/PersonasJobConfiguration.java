@@ -28,10 +28,10 @@ import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.oxm.xstream.XStreamMarshaller;
@@ -48,6 +48,8 @@ public class PersonasJobConfiguration {
 	JobRepository jobRepository;
 	@Autowired
 	PlatformTransactionManager transactionManager;
+	@Autowired
+	public PersonaItemProcessor personaItemProcessor;
 	
 	// CSV a DB
 
@@ -62,8 +64,7 @@ public class PersonasJobConfiguration {
 			}})
 			.build();
 		}
-		@Autowired
-		public PersonaItemProcessor personaItemProcessor;
+		
 		@Bean
 		@DependsOnDatabaseInitialization
 		public JdbcBatchItemWriter<Persona> personaDBItemWriter(DataSource dataSource) {
@@ -83,15 +84,16 @@ public class PersonasJobConfiguration {
 				.build();
 			}
 //			@Bean
-//			public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> 
-//				personaDBItemWriter) {
-//				return new JobBuilder("personasJob", jobRepository)
-//					.incrementer(new RunIdIncrementer())
-//					.listener(listener)
-//					.start(importCSV2DBStep(1, "input/personas-1.csv", personaDBItemWriter))
-//					.build();
-//			}
-			
+			public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> 
+				personaDBItemWriter) {
+				return new JobBuilder("personasJob", jobRepository)
+					.incrementer(new RunIdIncrementer())
+					.listener(listener)
+					.start(importCSV2DBStep(1, "input/personas-1.csv", personaDBItemWriter))
+					.build();
+			}
+		
+			// DB a CSV
 		
 		@Bean
 		JdbcCursorItemReader<Persona> personaDBItemReader(DataSource dataSource) {
@@ -100,6 +102,7 @@ public class PersonasJobConfiguration {
 				.rowMapper(new BeanPropertyRowMapper<>(Persona.class))
 				.build();
 		}
+		
 		@Bean
 		public FlatFileItemWriter<Persona> personaCSVItemWriter() {
 			return new FlatFileItemWriterBuilder<Persona>().name("personaCSVItemWriter")
@@ -125,15 +128,15 @@ public class PersonasJobConfiguration {
 				.build();
 		}
 //		@Bean
-//		public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> 
-//			personaDBItemWriter, Step exportDB2CSVStep) {
-//			return new JobBuilder("personasJob", jobRepository)
-//				.incrementer(new RunIdIncrementer())
-//				.listener(listener)
-//				.start(importCSV2DBStep(1, "input/personas-1.csv", personaDBItemWriter))
-//				.next(exportDB2CSVStep)
-//				.build();
-//		}
+		public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> 
+			personaDBItemWriter, Step exportDB2CSVStep) {
+			return new JobBuilder("personasJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.listener(listener)
+				.start(importCSV2DBStep(1, "input/personas-1.csv", personaDBItemWriter))
+				.next(exportDB2CSVStep)
+				.build();
+		}
 
 		
 		// XML a DB
@@ -187,17 +190,46 @@ public class PersonasJobConfiguration {
 		
 		@Bean
 		 public Job personasJob(Step importXML2DBStep1, Step 
-		exportDB2XMLStep, Step exportDB2CSVStep) {
-		 return new JobBuilder("personasJob", jobRepository)
-		 .incrementer(new RunIdIncrementer())
-		 .start(importXML2DBStep1)
-		 .next(exportDB2XMLStep)
-		 .next(exportDB2CSVStep)
-		 .build();
+				 exportDB2XMLStep, Step exportDB2CSVStep) {
+			 return new JobBuilder("personasJob", jobRepository)
+			 .incrementer(new RunIdIncrementer())
+			 .start(importXML2DBStep1)
+			 .next(exportDB2XMLStep)
+			 .next(exportDB2CSVStep)
+			 .build();
 		 }
 		
 		
 			
-
+// Tasklet
+	    
+//	    @Bean
+//	    FTPLoadTasklet ftpLoadTasklet(@Value("${input.dir.name:./ftp}") String dir) {
+//			FTPLoadTasklet tasklet = new FTPLoadTasklet();
+//			tasklet.setDirectoryResource(new FileSystemResource(dir));
+//			return tasklet;
+//		}
+//
+//	    @Bean
+//	    Step copyFilesInDir(FTPLoadTasklet ftpLoadTasklet) {
+//		        return new StepBuilder("copyFilesInDir", jobRepository)
+//		            .tasklet(ftpLoadTasklet, transactionManager)
+//		            .build();
+//		}
+//	
+//		
+////		@Bean
+//		public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> personaDBItemWriter, Step exportDB2CSVStep,
+//				Step importXML2DBStep1, Step exportDB2XMLStep, 
+//				Step copyFilesInDir) {
+//
+//			var job = new JobBuilder("personasJob", jobRepository)
+//					.incrementer(new RunIdIncrementer())
+//					.start(copyFilesInDir);
+//			for(int i = 1; i <= 3; i++)
+//				job = job.next(importCSV2DBStep(i, "input/personas-" + i +".csv", personaDBItemWriter));
+//			job = job.next(exportDB2CSVStep);
+//			return job.build();
+//		}
 
 }
