@@ -1,6 +1,7 @@
 package com.example.domain.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +31,7 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
@@ -184,5 +187,83 @@ class LanguageTest {
 		ls.delete(l);		
 		verify(lr).delete(l);
 	}	
+	
+	
+	
+	
+	
+	@Test
+	@DisplayName("Nombre vacío violación @NotBlank")
+	public void testNombreVacio() {
+	    Language language = new Language(0, " ");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);        
+	    assertFalse(violations.isEmpty());            
+	}
+	
+	@Test
+	@DisplayName("Nombre inválido violación @Pattern")
+	public void testNombreInvalido() {
+	    Language language = new Language(0,  "nombre");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);        
+//	    System.out.println("inv");
+//	    System.out.println(violations.size());
+//	    for (ConstraintViolation<Language> violation: violations) {
+//	        System.out.println("Property path "+violation.getPropertyPath());
+//	        System.out.println("Message "+violation.getMessage());
+//	        System.out.println("Invalid value "+violation.getInvalidValue());
+//	    }  
+	    
+	    assertFalse(violations.isEmpty());                
+	    assertTrue(violations.iterator().next().getMessage().contains("comenzar con mayúscula"));
+	}
+	
+	@Test
+	@DisplayName("Nombre inválido > 25 violación @Size")
+	public void testNombreInvalidoSizeMas15() {
+	    Language language = new Language(0, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);    
+	    System.out.println("> 25");
+	    System.out.println(violations.size());
+	    for (ConstraintViolation<Language> violation: violations) {
+	        System.out.println("Property path "+violation.getPropertyPath());
+	        System.out.println("Message "+violation.getMessage());
+	        System.out.println("Invalid value "+violation.getInvalidValue());
+	    }    
+	    assertFalse(violations.isEmpty());                
+	    assertTrue(violations.iterator().next().getMessage().contains("comenzar con mayúscula"));
+	}
+
+	@Test
+	@DisplayName("Nombre inválido < 2 violación @Size")
+	public void testNombreInvalidoSizeMenos3() {
+	    Language language = new Language(0,  "A");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);    
+	    System.out.println("< 3");
+	    System.out.println(violations.size());
+	    for (ConstraintViolation<Language> violation: violations) {
+	        System.out.println("Property path "+violation.getPropertyPath());
+	        System.out.println("Message "+violation.getMessage());
+	        System.out.println("Invalid value "+violation.getInvalidValue());
+	    }    
+	    assertFalse(violations.isEmpty());                
+	    assertTrue(violations.iterator().next().getMessage().contains("mayúscula"));
+	}
+
+	@Test
+	@DisplayName("Nombre válido")
+	public void testNombreValido() {
+	    Language language = new Language(0, "Italiano");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);            
+	    assertTrue(violations.isEmpty());
+	}
+
+	
+	@Test
+	@DisplayName("Violation @NotNull")
+	public void testLastUpdateNullDate() {
+	    Language language = new Language(0, "Español");
+	    Set<ConstraintViolation<Language>> violations = validator.validate(language);    
+	    assertFalse(violations.isEmpty());    
+	}
 
 }
