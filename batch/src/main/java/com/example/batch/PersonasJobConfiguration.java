@@ -1,5 +1,7 @@
 package com.example.batch;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.file.FlatFileHeaderCallback;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -39,6 +42,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.example.models.Persona;
 import com.example.models.PersonaDTO;
+import com.example.models.PhotoDTO;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 
 @Configuration
@@ -93,7 +97,7 @@ public class PersonasJobConfiguration {
 					.build();
 			}
 		
-			// DB a CSV
+		// DB a CSV
 		
 		@Bean
 		JdbcCursorItemReader<Persona> personaDBItemReader(DataSource dataSource) {
@@ -188,7 +192,7 @@ public class PersonasJobConfiguration {
 					.build();
 		}
 		
-		@Bean
+//		@Bean
 		 public Job personasJob(Step importXML2DBStep1, Step 
 				 exportDB2XMLStep, Step exportDB2CSVStep) {
 			 return new JobBuilder("personasJob", jobRepository)
@@ -198,38 +202,89 @@ public class PersonasJobConfiguration {
 			 .next(exportDB2CSVStep)
 			 .build();
 		 }
+		 
+//			@Bean
+//			public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> personaDBItemWriter, Step exportDB2CSVStep,
+//					Step importXML2DBStep1, Step exportDB2XMLStep, 
+//					Step copyFilesInDir) {
+//				return new JobBuilder("personasJob", jobRepository)
+//						.incrementer(new RunIdIncrementer())
+//						.listener(listener)
+//						.start(importCSV2DBStep(1, "input/personas-1.csv", personaDBItemWriter)) // CSV to DB
+//						.next(importXML2DBStep1) // XML to DB
+//						.next(exportDB2CSVStep) // DB to CSV
+//						.next(exportDB2XMLStep) // DB to XML
+//						.build();
+////				var job = new JobBuilder("personasJob", jobRepository)
+////						.incrementer(new RunIdIncrementer())
+////						.start(copyFilesInDir);
+////				for(int i = 1; i <= 3; i++)
+////					job = job.next(importCSV2DBStep(i, "input/personas-" + i +".csv", personaDBItemWriter));
+////				job = job.next(exportDB2CSVStep);
+////				return job.build();
+//			}
 		
 		
 			
 // Tasklet
 	    
-//	    @Bean
-//	    FTPLoadTasklet ftpLoadTasklet(@Value("${input.dir.name:./ftp}") String dir) {
-//			FTPLoadTasklet tasklet = new FTPLoadTasklet();
-//			tasklet.setDirectoryResource(new FileSystemResource(dir));
-//			return tasklet;
-//		}
-//
-//	    @Bean
-//	    Step copyFilesInDir(FTPLoadTasklet ftpLoadTasklet) {
-//		        return new StepBuilder("copyFilesInDir", jobRepository)
-//		            .tasklet(ftpLoadTasklet, transactionManager)
-//		            .build();
-//		}
-//	
-//		
-////		@Bean
-//		public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> personaDBItemWriter, Step exportDB2CSVStep,
-//				Step importXML2DBStep1, Step exportDB2XMLStep, 
-//				Step copyFilesInDir) {
-//
-//			var job = new JobBuilder("personasJob", jobRepository)
-//					.incrementer(new RunIdIncrementer())
-//					.start(copyFilesInDir);
-//			for(int i = 1; i <= 3; i++)
-//				job = job.next(importCSV2DBStep(i, "input/personas-" + i +".csv", personaDBItemWriter));
-//			job = job.next(exportDB2CSVStep);
-//			return job.build();
-//		}
+	    @Bean
+	    FTPLoadTasklet ftpLoadTasklet(@Value("${input.dir.name:./ftp}") String dir) {
+			FTPLoadTasklet tasklet = new FTPLoadTasklet();
+			tasklet.setDirectoryResource(new FileSystemResource(dir));
+			return tasklet;
+		}
+
+	    @Bean
+	    Step copyFilesInDir(FTPLoadTasklet ftpLoadTasklet) {
+		        return new StepBuilder("copyFilesInDir", jobRepository)
+		            .tasklet(ftpLoadTasklet, transactionManager)
+		            .build();
+		}
+	
+		
+//		@Bean
+		public Job personasJob(PersonasJobListener listener, JdbcBatchItemWriter<Persona> personaDBItemWriter, Step exportDB2CSVStep,
+				Step importXML2DBStep1, Step exportDB2XMLStep, 
+				Step copyFilesInDir) {
+
+			var job = new JobBuilder("personasJob", jobRepository)
+					.incrementer(new RunIdIncrementer())
+					.start(copyFilesInDir);
+			for(int i = 1; i <= 3; i++)
+				job = job.next(importCSV2DBStep(i, "input/personas-" + i +".csv", personaDBItemWriter));
+			job = job.next(exportDB2CSVStep);
+			return job.build();
+		}
+		
+		
+		@Bean
+		Job photoJob(PhotoRestItemReader photoRestItemReader, JdbcCursorItemReader<Persona> personaDBItemReader) {
+			String[] headers = new String[] { "id", "author", "width", "height", "url", "download_url" };
+			
+			return new JobBuilder("photoJob", jobRepository)
+					.incrementer(new RunIdIncrementer())
+					.start(new StepBuilder("photoStep1", jobRepository)
+							.<PhotoDTO, PhotoDTO>chunk(100, transactionManager)
+							.reader(photoRestItemReader)
+							.writer(new FlatFileItemWriterBuilder<PhotoDTO>().name("photoCSVItemWriter")
+									.resource(new FileSystemResource("output/photoData.csv"))
+									.headerCallback(new FlatFileHeaderCallback() {
+										public void writeHeader(Writer writer) throws IOException {
+											writer.write(String.join(",", headers));
+										}
+									}).lineAggregator(new DelimitedLineAggregator<PhotoDTO>() {
+										{
+											setDelimiter(",");
+											setFieldExtractor(new BeanWrapperFieldExtractor<PhotoDTO>() {
+												{
+													setNames(headers);
+												}
+											});
+										}
+									}).build())
+							.build())
+					.build();
+		}
 
 }
