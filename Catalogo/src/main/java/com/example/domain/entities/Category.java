@@ -34,9 +34,8 @@ public class Category  extends AbstractEntity<Actor> implements Serializable {
 	@Column(name="category_id", unique=true, nullable=false)
 	private int categoryId;
 
-	@Column(name="last_update", nullable=false)
-	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
-	@PastOrPresent
+	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@PastOrPresent 
 	private Timestamp lastUpdate;
 
 	@Column(nullable=false, length=25)

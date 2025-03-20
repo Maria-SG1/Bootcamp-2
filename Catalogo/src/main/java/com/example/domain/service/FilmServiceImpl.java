@@ -114,4 +114,9 @@ public class FilmServiceImpl implements FilmService {
 		return dao.findAll(pageable);
 	}
 
+	@Override
+	public List<Film> findByLengthBetween(int val1, int val2) {		
+		return dao.findByLengthBetween(val1, val2);
+	}
+
 }

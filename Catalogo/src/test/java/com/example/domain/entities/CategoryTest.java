@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ import jakarta.validation.Validator;
 class CategoryTest {
 	private Validator validator;
 	private CategoryRepository cr;
-	private CategoryService cs;
+	private CategoryService cs;	
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -142,13 +141,13 @@ class CategoryTest {
 	
 	@Test
 	@DisplayName("Modificar categoría inexistente")
-	public void testModificarInexistente() throws ItemNotFoundException {
+	public void testModificarInexistente() throws ItemNotFoundException, InvalidDataException {
 		var c = new Category(1000, "Loquesea");
 		when(cr.findById(c.getCategoryId())).thenReturn(Optional.empty());
 		var ex = assertThrows(ItemNotFoundException.class, () -> cs.modify(c));
 		assertEquals("No existe categoría con este ID." + c.getCategoryId(), ex.getMessage());
 		verify(cr).findById(c.getCategoryId());
-		verify(cr, never()).save(any(Category.class));
+		verify(cr, never()).save(any(Category.class));	
 	}
 	
 	@Test
@@ -255,12 +254,12 @@ class CategoryTest {
 		assertFalse(violations.isEmpty());	
 	}
 	
-	@Test
-	@DisplayName("Violation @NotNull")
-	public void testLastUpdateNullDate() {
-		Category c = new Category(0, null, "Nombre");
-		Set<ConstraintViolation<Category>> violations = validator.validate(c);	
-		assertFalse(violations.isEmpty());	
-	}
+//	@Test
+//	@DisplayName("Violation @NotNull")
+//	public void testLastUpdateNullDate() {
+//		Category c = new Category(0, null, "Nombre");
+//		Set<ConstraintViolation<Category>> violations = validator.validate(c);	
+//		assertFalse(violations.isEmpty());	
+//	}
 
 }

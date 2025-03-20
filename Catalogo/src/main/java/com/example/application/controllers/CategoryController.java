@@ -49,13 +49,13 @@ public class CategoryController {
 	public CategoryDTO getOne(@PathVariable @Parameter(description="Identificador del actor") int id) throws ItemNotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty()) {
-			throw new ItemNotFoundException("No se encontró el actor con id " + id);
+			throw new ItemNotFoundException("No se encontró categoría con id " + id);
 		}
 		return CategoryDTO.from(item.get());
 	}
 	
 	@PostMapping
-	@ApiResponse(responseCode="201", description="Actor creado")
+	@ApiResponse(responseCode="201", description="Categoría creada")
 	public ResponseEntity<Object> create(@Valid @RequestBody CategoryDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		var newItem = srv.add(CategoryDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -68,9 +68,16 @@ public class CategoryController {
 	public void update(@PathVariable int id, @Valid @RequestBody CategoryDTO item) throws BadRequestException, ItemNotFoundException, InvalidDataException {
 		if (item.getCategoryId() != id) {
 			throw new BadRequestException("El id de la categoría no coincide con el recurso a modificar");
-		}
+		}	
+		
+//		try {
+//			srv.modify(CategoryDTO.from(item));
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			throw e;
+//		}
 		srv.modify(CategoryDTO.from(item));
-	}
+	}	
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

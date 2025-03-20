@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -52,10 +53,8 @@ public class Actor  extends AbstractEntity<Actor> implements Serializable {
 	@JsonProperty("lastName")
 	private String lastName;	
 	
-	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	@NotNull(message = "La fecha de la última actualización no puede ser nula.")
+	@Column(name="last_update", insertable=false, updatable=false, nullable=false)	
 	@PastOrPresent
-	@JsonIgnore
 	private Timestamp lastUpdate;
 	
 //	@OneToMany(mappedBy="actor", fetch = FetchType.EAGER)

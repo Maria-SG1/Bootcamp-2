@@ -2,11 +2,13 @@ package com.example.domain.entities.dto;
 
 import com.example.domain.entities.Category;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data 
 @AllArgsConstructor
+@Schema(name="Categoría")
 public class CategoryDTO {
 	private int categoryId;
 	private String name;

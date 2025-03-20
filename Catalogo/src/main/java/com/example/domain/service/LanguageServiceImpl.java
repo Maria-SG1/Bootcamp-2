@@ -6,16 +6,16 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-import com.example.exceptions.DuplicateKeyException;
+import org.springframework.stereotype.Service;
 
 import com.example.domain.contracts.repository.LanguageRepository;
 import com.example.domain.contracts.service.LanguageService;
-import com.example.domain.entities.Category;
 import com.example.domain.entities.Language;
+import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
+@Service
 public class LanguageServiceImpl implements LanguageService {
 
 	private LanguageRepository dao;

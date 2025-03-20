@@ -12,6 +12,7 @@ import com.example.domain.entities.Film;
 public interface FilmRepository extends JpaRepository<Film, Integer>, JpaSpecificationExecutor<Actor>, RepositoryWithProjections {
 	List<Film> findByLengthLessThan(int length);
 	List<Film> findByTitleStartingWith(String prefix);
+	List<Film> findByLengthBetween(int val1, int val2);
 	
 	<T> List<T> findByFilmIdGreaterThan(int id, Class<T> type);
 }

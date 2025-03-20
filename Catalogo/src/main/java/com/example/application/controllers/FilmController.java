@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.application.controllers.ActorController.Titulo;
 import com.example.domain.contracts.service.FilmService;
-import com.example.domain.entities.dto.ActorDTO;
+import com.example.domain.entities.Film;
 import com.example.domain.entities.dto.FilmDTO;
 import com.example.domain.entities.dto.FilmShort;
 import com.example.exceptions.DuplicateKeyException;
@@ -33,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/peliculas/v1")
@@ -129,4 +129,13 @@ public class FilmController {
 		}
 		srv.deleteById(id);
 	}
+	
+	
+	@GetMapping("/{length1}/{length2}")
+	public List<FilmDTO> findByLengthBetween(@PathVariable int length1, @PathVariable int length2) {
+		srv.findByLengthBetween(length1, length2);		
+		return srv.findByLengthBetween(length1, length2)
+				.stream().map(FilmDTO::from).toList();	
+	}
+	
 }

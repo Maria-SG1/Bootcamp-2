@@ -297,13 +297,13 @@ class ActorTest {
 		assertFalse(violations.isEmpty());	
 	}
 	
-	@Test
-	@DisplayName("Violation @NotNull")
-	public void testLastUpdateNullDate() {
-		Actor a = new Actor(0, "Nombre", "Apellido", null, new ArrayList<>());
-		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
-		assertFalse(violations.isEmpty());	
-	}
+//	@Test
+//	@DisplayName("Violation @NotNull")
+//	public void testLastUpdateNullDate() {
+//		Actor a = new Actor(0, "Nombre", "Apellido", null, new ArrayList<>());
+//		Set<ConstraintViolation<Actor>> violations = validator.validate(a);	
+//		assertFalse(violations.isEmpty());	
+//	}
 	
 	@Test
 	void testGetActorsFilmsConFilms() throws ItemNotFoundException { 
