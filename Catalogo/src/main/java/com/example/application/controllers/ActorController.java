@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.apache.coyote.BadRequestException;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,9 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -41,19 +44,20 @@ public class ActorController {
 	}
 	
 	@GetMapping
+	@Hidden
 	public List<ActorDTO> getAll() {
 		return srv.getByProjection(ActorDTO.class);
 	}
 	
 	@GetMapping(params= {"page"})
 	@Operation(summary="Obtiene actores paginados")
-	public Page<ActorDTO> getAll(Pageable pageable) {
+	public Page<ActorDTO> getAll(@ParameterObject Pageable pageable) {
 		return srv.getByProjection(pageable, ActorDTO.class);
 	}
 
 	@GetMapping(path = "/{id}")
 	@Operation(summary="Obtiene actor por id")
-	public ActorDTO getOne(@PathVariable int id) throws ItemNotFoundException {
+	public ActorDTO getOne(@PathVariable @Parameter(description="Identificador del actor") int id) throws ItemNotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty()) {
 			throw new ItemNotFoundException("No se encontró el actor con id " + id);

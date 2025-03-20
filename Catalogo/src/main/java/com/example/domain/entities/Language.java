@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,10 +39,12 @@ public class Language  extends AbstractEntity<Actor> implements Serializable {
 
 	@OneToMany(mappedBy="languageVO")
 	@Valid
+	@JsonIgnore
 	private List<Film> filmsVO;
 
 	@OneToMany(mappedBy="language2")
 	@Valid
+	@JsonIgnore
 	private List<Film> films2;	
 
 	public Language() {

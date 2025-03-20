@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -92,20 +93,24 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="language_id", nullable=false)
 	@NotNull
+	@JsonIgnore
 	private Language languageVO;
 
 	@ManyToOne
 	@JoinColumn(name="original_language_id")
+	@JsonIgnore
 	private Language language2;
 
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	@Valid
+	@JsonIgnore
 	private List<FilmActor> filmActors;
 
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	@Valid
+	@JsonIgnore
 	private List<FilmCategory> filmCategories;	
 
 	public Film() {
