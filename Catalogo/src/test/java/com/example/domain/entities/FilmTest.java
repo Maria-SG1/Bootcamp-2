@@ -261,6 +261,7 @@ class FilmTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "1, 0", "10, 0", "0, 1", "11, 1", "-1, 1"})
+//	@CsvSource({ "1, 0", "-1, 1"})
 	public void testRentalDuration(String rentalDuration, int numViolations) {
 		Film f = new Film();
 		f.setRentalDuration(Byte.valueOf(rentalDuration));
@@ -270,6 +271,7 @@ class FilmTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "0.01, 0", "1000.00, 0", "0.00, 1", "1000.01, 1", "null, 1"})
+//	@CsvSource({ "0.01, 0", "1000.00, 0", "0.00, 1", "1000.01, 1", "null, 0"})
 	public void testRentalRate(String rentalRate, int numViolations) {
 		Film f = new Film();
 		if (!"null".equals(rentalRate)) {
@@ -283,6 +285,7 @@ class FilmTest {
 
 	@ParameterizedTest
 	@CsvSource({ "0.01, 0", "500.00, 0", "0.00, 1", "null, 1"})
+//	@CsvSource({ "0.01, 0", "500.00, 0", "0.00, 1", "null, 0"})
 	public void testReplacementCost(String replacementCost, int numViolations) {
 		Film f = new Film();
 		if (!"null".equals(replacementCost)) {

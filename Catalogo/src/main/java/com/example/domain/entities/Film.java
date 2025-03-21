@@ -49,7 +49,7 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@Size(max = 255)
 	private String description;
 
-	@Column(name="last_update", nullable=false)
+	@Column(name="last_update", nullable=false, insertable = false, updatable = false)
 //	@NotNull
 	@PastOrPresent
 	private Timestamp lastUpdate;
@@ -74,6 +74,7 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@NotNull
 	@Min(1)
 	@Max(10)
+//	@Positive
 	private byte rentalDuration;
 
 	@Column(name="rental_rate", nullable=false, precision=10, scale=2)
@@ -94,7 +95,7 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name="language_id", nullable=false)
-//	@NotNull
+	@NotNull
 	@JsonIgnore
 	private Language languageVO;
 
@@ -132,6 +133,51 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.filmActors = new ArrayList<>();
 		this.filmCategories = new ArrayList<>();
 	}	
+
+	public Film(int filmId, @Size(max = 255) String description, 
+//			@PastOrPresent Timestamp lastUpdate,
+			@Positive @Min(15) @Max(210) Integer length,
+//			@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.") String rating,
+			@Min(1920) @Max(2030) Short releaseYear, @Positive byte rentalDuration,
+			@DecimalMin("0.01") @DecimalMax("1000.00") BigDecimal rentalRate,
+			@DecimalMin("0.01") BigDecimal replacementCost, @NotBlank @Size(max = 128, min = 2) String title,
+			Language languageVO, Language language2) {
+		super();
+		this.filmId = filmId;
+		this.description = description;
+//		this.lastUpdate = lastUpdate;
+		this.length = length;
+//		this.rating = rating;
+		this.releaseYear = releaseYear;
+		this.rentalDuration = rentalDuration;
+		this.rentalRate = rentalRate;
+		this.replacementCost = replacementCost;
+		this.title = title;
+		this.languageVO = languageVO;
+		this.language2 = language2;
+	}
+	
+	
+
+	public Film(int filmId, @Size(max = 255) String description, @Positive @Min(15) @Max(210) Integer length,
+			@Min(1920) @Max(2030) Short releaseYear, @NotBlank @Size(max = 128, min = 2) String title,
+//			@NotNull Language languageVO, 
+			Language language2) {
+		super();
+		this.filmId = filmId;
+		this.description = description;
+		this.length = length;
+		this.releaseYear = releaseYear;
+		this.title = title;
+//		this.languageVO = languageVO;
+		this.language2 = language2;
+	}
+
+	public Film(@NotBlank @Size(max = 128, min = 2) String title, Language language2) {
+		super();
+		this.title = title;
+		this.language2 = language2;
+	}
 
 	public int getFilmId() {
 		return this.filmId;

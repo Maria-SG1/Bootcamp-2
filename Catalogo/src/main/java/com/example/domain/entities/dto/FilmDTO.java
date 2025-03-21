@@ -1,5 +1,7 @@
 package com.example.domain.entities.dto;
 
+import java.math.BigDecimal;
+
 import com.example.domain.entities.Actor;
 import com.example.domain.entities.Film;
 import com.example.domain.entities.Language;
@@ -31,18 +33,30 @@ public class FilmDTO {
 	@NotNull
 	@Min(1920)
 	@Max(2030)
-	private int releaseYear;
-	@JsonProperty("idioma_original")
-	private Language languageVO;
+	private Short releaseYear;
+	
+	private byte rentalDuration;
+	private BigDecimal rentalRate;
+	private BigDecimal replacementCost;
+	
 	@JsonProperty("idioma_traduccion")
+	private Language languageVO;
+	@JsonProperty("idioma_original")
 	private Language language2;
 	
 	public static FilmDTO from(Film source) {
 		return new FilmDTO(source.getFilmId(), source.getTitle(), source.getDescription(), 
-				source.getLength(), source.getReleaseYear(), source.getLanguageVO(), source.getLanguage2());
+				source.getLength(), source.getReleaseYear(), source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getLanguageVO(), source.getLanguage2());
 	}
 	
 	public static Film from(FilmDTO source) {
-		return new Film(source.getFilmId(), source.getTitle());
+		return new Film(source.getFilmId(), source.getDescription(), 
+				source.getLength(), source.getReleaseYear(), source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getTitle(), source.getLanguageVO(),  source.getLanguage2());
 	}
+	
+//	public static Film from(FilmDTO source) {
+//		return new Film(source.getFilmId(), source.getTitle());
+//	}
+	
+	
 }

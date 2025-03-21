@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domain.contracts.service.FilmService;
-import com.example.domain.entities.Film;
 import com.example.domain.entities.dto.FilmDTO;
 import com.example.domain.entities.dto.FilmShort;
 import com.example.exceptions.DuplicateKeyException;
