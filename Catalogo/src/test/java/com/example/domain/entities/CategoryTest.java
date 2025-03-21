@@ -254,12 +254,12 @@ class CategoryTest {
 		assertFalse(violations.isEmpty());	
 	}
 	
-//	@Test
-//	@DisplayName("Violation @NotNull")
-//	public void testLastUpdateNullDate() {
-//		Category c = new Category(0, null, "Nombre");
-//		Set<ConstraintViolation<Category>> violations = validator.validate(c);	
-//		assertFalse(violations.isEmpty());	
-//	}
+	@Test
+	@DisplayName("Violation @NotNull")
+	public void testLastUpdateNullDate() {
+		Category c = new Category(0, null, "Nombre");
+		Set<ConstraintViolation<Category>> violations = validator.validate(c);	
+		assertFalse(violations.isEmpty());	
+	}
 
 }

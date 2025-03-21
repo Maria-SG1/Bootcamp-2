@@ -31,6 +31,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -49,21 +50,22 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	private String description;
 
 	@Column(name="last_update", nullable=false)
-	@NotNull
+//	@NotNull
 	@PastOrPresent
 	private Timestamp lastUpdate;
 
 	@Column(name = "length")
+	@Positive
 	@Min(15)
 	@Max(210)
-	private int length;
+	private Integer length;
 
 	@Column(length=1)
 	@Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$", message = "Rating inválido. Valores permitidos: G, PG, PG-13, R, NC-17.")
 	private String rating;
 
 	@Column(name="release_year")
-	@NotNull
+//	@NotNull
 	@Min(1920)
 	@Max(2030)
 	private Short releaseYear;
@@ -92,7 +94,7 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name="language_id", nullable=false)
-	@NotNull
+//	@NotNull
 	@JsonIgnore
 	private Language languageVO;
 

@@ -158,6 +158,7 @@ class FilmTest {
 			var f = new Film(10, "ABCDE");
 			when(fr.findById(10)).thenReturn(Optional.of(f));			
 			f.setTitle("EDCBA");	
+			f.setLength(100);			
 			fs.modify(f);		
 			assertEquals("EDCBA", f.getTitle());
 			verify(fr).save(any(Film.class)); 		
@@ -184,7 +185,7 @@ class FilmTest {
 	}
 	
 	@Nested
-	@DisplayName("Delete Actor")
+	@DisplayName("Delete Film")
 	class Delete {
 		@Test
 		@DisplayName("Borrar por id")
@@ -237,7 +238,7 @@ class FilmTest {
 	}	
 	
 	@ParameterizedTest
-	@CsvSource({ "15, 0", "210, 0", "100, 0", "14, 1", "211, 1"})
+	@CsvSource({ "15, 0", "210, 0", "100, 0", "14, 1", "211, 1", "-100, 2"})
 	public void testLength(int length, int numViolations) {
 		Film f = new Film();
 		f.setLength(length);
@@ -246,7 +247,7 @@ class FilmTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({ "1920, 0", "2030, 0", "1919, 1", "2031, 1", "null, 1"})
+	@CsvSource({ "1920, 0", "2030, 0", "1919, 1", "2031, 1", "null, 0"})
 	public void testReleaseYear(String releaseYear, int numViolations) {
 		Film f = new Film();
 		if (!"null".equals(releaseYear)) {
