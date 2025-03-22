@@ -1,8 +1,8 @@
 package com.example.domain.entities.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import com.example.domain.entities.Actor;
 import com.example.domain.entities.Film;
 import com.example.domain.entities.Language;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,14 +44,40 @@ public class FilmDTO {
 	@JsonProperty("idioma_original")
 	private Language language2;
 	
+	private List<String> actors;
+	private List<String> categories;
+	
 	public static FilmDTO from(Film source) {
-		return new FilmDTO(source.getFilmId(), source.getTitle(), source.getDescription(), 
-				source.getLength(), source.getReleaseYear(), source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getLanguageVO(), source.getLanguage2());
+		return new FilmDTO(
+				source.getFilmId(), 
+				source.getTitle(), 
+				source.getDescription(), 
+				source.getLength(), 
+				source.getReleaseYear(), 
+				source.getRentalDuration(), 
+				source.getRentalRate(), 
+				source.getReplacementCost(), 
+				source.getLanguageVO(), 
+				source.getLanguage2(),				
+				source.getActors().stream().map(item -> item.getFirstName() + " " + item.getLastName())
+				.sorted().toList(),
+				source.getCategories().stream().map(item -> item.getName()).sorted().toList()
+				);
 	}
 	
 	public static Film from(FilmDTO source) {
-		return new Film(source.getFilmId(), source.getDescription(), 
-				source.getLength(), source.getReleaseYear(), source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getTitle(), source.getLanguageVO(),  source.getLanguage2());
+		return new Film(
+				source.getFilmId(), 
+				source.getDescription(), 
+				source.getLength(), 
+				source.getReleaseYear(), 
+				source.getRentalDuration(), 
+				source.getRentalRate(), 
+				source.getReplacementCost(), 
+				source.getTitle(), 
+				source.getLanguageVO(),  
+				source.getLanguage2()
+				);
 	}
 	
 }

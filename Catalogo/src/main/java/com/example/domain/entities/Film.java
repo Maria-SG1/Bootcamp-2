@@ -350,5 +350,74 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		return filmCategory;
 	}
 
+//
+	
+	public List<Actor> getActors() {
+		return this.filmActors.stream().map(item -> item.getActor()).toList();
+	}
 
+	public void setActors(List<Actor> source) {
+		if (filmActors == null || !filmActors.isEmpty())
+			clearActors();
+		source.forEach(item -> addActor(item));
+	}
+	
+	public void clearActors() {
+		filmActors = new ArrayList<FilmActor>();
+	}
+	
+	public void addActor(Actor actor) {
+		FilmActor filmActor = new FilmActor(actor,this);
+		filmActors.add(filmActor);
+	}
+
+	public void addActor(int actorId) {
+		addActor(new Actor(actorId));
+	}
+
+	public void removeActor(Actor actor) {
+		var filmActor = filmActors.stream().filter(item -> item.getActor().equals(actor)).findFirst();
+		if (filmActor.isEmpty())
+			return;
+		filmActors.remove(filmActor.get());
+	}
+
+	public void removeActor(int actorId) {
+		removeActor(new Actor(actorId));
+	}
+	
+	
+	public List<Category> getCategories() {
+		return this.filmCategories.stream().map(item -> item.getCategory()).toList();
+	}
+
+	public void setCategories(List<Category> source) {
+		if (filmCategories == null || !filmCategories.isEmpty())
+			clearCategories();
+		source.forEach(item -> addCategory(item));
+	}
+
+	public void clearCategories() {
+		filmCategories = new ArrayList<FilmCategory>();
+	}
+
+	public void addCategory(Category item) {
+		FilmCategory filmCategory = new FilmCategory(item, this);
+		filmCategories.add(filmCategory);
+	}
+
+	public void addCategory(int id) {
+		addCategory(new Category(id));
+	}
+
+	public void removeCategory(Category ele) {
+		var filmCategory = filmCategories.stream().filter(item -> item.getCategory().equals(ele)).findFirst();
+		if (filmCategory.isEmpty())
+			return;
+		filmCategories.remove(filmCategory.get());
+	}
+
+	public void removeCategory(int id) {
+		removeCategory(new Category(id));
+	}
 }
