@@ -109,6 +109,25 @@ public class FilmController {
 			.buildAndExpand(newItem.getFilmId()).toUri();
 		return ResponseEntity.created(location).build();
 	}
+	
+	/*
+	 * {
+		  "id": 0,
+		  
+		  "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
+		  "lastUpdate": "2025-03-21T10:53:37Z",
+		  "length": 86,
+		  "releaseYear": 2006,
+		  "rentalDuration": 6,
+		  "rentalRate": 0.99,
+		  "replacementCost": 20.99,
+		  "title": "ACADEMY",
+		  "idioma_traduccion": {
+		    "languageId": 1,
+		    "name": "English"
+		  },
+		  "idioma_original": null
+	}*/
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

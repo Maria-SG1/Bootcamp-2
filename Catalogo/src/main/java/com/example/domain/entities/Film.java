@@ -50,7 +50,6 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	private String description;
 
 	@Column(name="last_update", nullable=false, insertable = false, updatable = false)
-//	@NotNull
 	@PastOrPresent
 	private Timestamp lastUpdate;
 
@@ -74,7 +73,6 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@NotNull
 	@Min(1)
 	@Max(10)
-//	@Positive
 	private byte rentalDuration;
 
 	@Column(name="rental_rate", nullable=false, precision=10, scale=2)
@@ -155,6 +153,8 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.title = title;
 		this.languageVO = languageVO;
 		this.language2 = language2;
+		this.filmActors = new ArrayList<>();
+		this.filmCategories = new ArrayList<>();
 	}
 	
 	
@@ -171,12 +171,16 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.title = title;
 //		this.languageVO = languageVO;
 		this.language2 = language2;
+		this.filmActors = new ArrayList<>();
+		this.filmCategories = new ArrayList<>();
 	}
 
 	public Film(@NotBlank @Size(max = 128, min = 2) String title, Language language2) {
 		super();
 		this.title = title;
 		this.language2 = language2;
+		this.filmActors = new ArrayList<>();
+		this.filmCategories = new ArrayList<>();
 	}
 
 	public int getFilmId() {

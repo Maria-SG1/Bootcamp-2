@@ -54,9 +54,4 @@ public class FilmDTO {
 				source.getLength(), source.getReleaseYear(), source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getTitle(), source.getLanguageVO(),  source.getLanguage2());
 	}
 	
-//	public static Film from(FilmDTO source) {
-//		return new Film(source.getFilmId(), source.getTitle());
-//	}
-	
-	
 }

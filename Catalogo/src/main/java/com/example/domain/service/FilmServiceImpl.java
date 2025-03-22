@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.example.domain.contracts.repository.FilmRepository;
 import com.example.domain.contracts.service.FilmService;
 import com.example.domain.entities.Film;
+import com.example.domain.entities.FilmActor;
+import com.example.domain.entities.FilmCategory;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.ItemNotFoundException;
@@ -65,8 +67,13 @@ public class FilmServiceImpl implements FilmService {
 			f.setTitle(item.getTitle());
 			f.setLanguage2(item.getLanguage2());
 			f.setLanguageVO(item.getLanguageVO());
-			f.setFilmActors(item.getFilmActors());
-			f.setFilmCategories(item.getFilmCategories());
+//			f.setFilmActors(item.getFilmActors());
+//			f.setFilmCategories(item.getFilmCategories());
+			
+			f.getFilmActors().clear();
+			f.getFilmActors().addAll(item.getFilmActors());
+			f.getFilmCategories().clear();
+			f.getFilmCategories().addAll(item.getFilmCategories());
 			return dao.save(item);
 		} else {
 			throw new ItemNotFoundException("No existe film con el ID " + item.getFilmId());
