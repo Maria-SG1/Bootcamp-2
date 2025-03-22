@@ -1,5 +1,6 @@
 package com.example.domain.contracts.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ public interface FilmRepository extends JpaRepository<Film, Integer>, JpaSpecifi
 	List<Film> findByLengthLessThan(int length);
 	List<Film> findByTitleStartingWith(String prefix);
 	List<Film> findByLengthBetween(int val1, int val2);
+	List<Film> findByLastUpdateGreaterThanEqualOrderByLastUpdate(Date fecha);
 	
 	<T> List<T> findByFilmIdGreaterThan(int id, Class<T> type);
 }

@@ -1,5 +1,6 @@
 package com.example.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -131,6 +132,11 @@ private ActorRepository dao;
 	@Override
 	public Page<Actor> getAll(Pageable pageable) {	
 		return dao.findAll(pageable);
+	}
+
+	@Override
+	public List<Actor> novedades(Date fecha) {
+		return dao.findByLastUpdateGreaterThanEqualOrderByLastUpdate(fecha);
 	}
 
 }

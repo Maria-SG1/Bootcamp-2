@@ -1,5 +1,6 @@
 package com.example.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,6 +125,11 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	public List<Film> findByLengthBetween(int val1, int val2) {		
 		return dao.findByLengthBetween(val1, val2);
+	}
+
+	@Override
+	public List<Film> novedades(Date fecha) {
+		return dao.findByLastUpdateGreaterThanEqualOrderByLastUpdate(fecha);
 	}
 
 }

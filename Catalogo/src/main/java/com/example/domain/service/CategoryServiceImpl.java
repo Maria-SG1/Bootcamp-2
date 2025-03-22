@@ -1,5 +1,6 @@
 package com.example.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,6 +97,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Page<Category> getAll(Pageable pageable) {
 		return dao.findAll(pageable);
+	}
+	@Override
+	public List<Category> novedades(Date fecha) {
+		return dao.findByLastUpdateGreaterThanEqualOrderByLastUpdate(fecha);
 	}
 
 }

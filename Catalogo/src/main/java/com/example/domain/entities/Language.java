@@ -2,9 +2,11 @@ package com.example.domain.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -36,6 +38,10 @@ public class Language  extends AbstractEntity<Actor> implements Serializable {
 	@Size(min = 2, max = 15)
 	@Pattern(regexp = "^[A-Z][a-z]+$", message = "El nombre debe comenzar con mayúscula seguida de letras minúsculas.")
 	private String name;
+	
+	@Column(name="last_update", insertable = false, updatable = false)	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	private Date lastUpdate;	
 
 	@OneToMany(mappedBy="languageVO")
 	@Valid
