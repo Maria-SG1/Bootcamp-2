@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.example.domain.core.entities.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -102,16 +103,20 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 	@JsonIgnore
 	private Language language2;
 
+	
+
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	@Valid
 	@JsonIgnore
+	@JsonBackReference
 	private List<FilmActor> filmActors;
 
 	@OneToMany(mappedBy="film", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	@Valid
 	@JsonIgnore
+	@JsonBackReference
 	private List<FilmCategory> filmCategories;	
 
 	public Film() {
@@ -157,7 +162,22 @@ public class Film  extends AbstractEntity<Actor> implements Serializable {
 		this.filmCategories = new ArrayList<>();
 	}
 	
-	
+	public Film(int filmId, @Size(max = 255) String description, @Positive @Min(15) @Max(210) Integer length,
+			@Min(1920) @Max(2030) Short releaseYear, @NotNull @Min(1) @Max(10) byte rentalDuration,
+			@NotNull @DecimalMin("0.01") @DecimalMax("1000.00") BigDecimal rentalRate,
+			@NotNull @DecimalMin("0.01") BigDecimal replacementCost, @NotBlank @Size(max = 128, min = 2) String title) {
+		super();
+		this.filmId = filmId;
+		this.description = description;
+		this.length = length;
+		this.releaseYear = releaseYear;
+		this.rentalDuration = rentalDuration;
+		this.rentalRate = rentalRate;
+		this.replacementCost = replacementCost;
+		this.title = title;
+		this.filmActors = new ArrayList<>();
+		this.filmCategories = new ArrayList<>();
+	}
 
 	public Film(int filmId, @Size(max = 255) String description, @Positive @Min(15) @Max(210) Integer length,
 			@Min(1920) @Max(2030) Short releaseYear, @NotBlank @Size(max = 128, min = 2) String title,

@@ -1,6 +1,7 @@
 package com.example.domain.entities.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.domain.entities.Film;
@@ -45,7 +46,10 @@ public class FilmDTO {
 	private Language language2;
 	
 	private List<String> actors;
-	private List<String> categories;
+	private List<String> categories;	
+	
+//	private List<Integer> actors = new ArrayList<>();
+//	private List<Integer> categories = new ArrayList<>();	
 	
 	public static FilmDTO from(Film source) {
 		return new FilmDTO(
@@ -79,5 +83,42 @@ public class FilmDTO {
 				source.getLanguage2()
 				);
 	}
+	
+//	public static FilmDTO from(Film source) {
+//	return new FilmDTO(
+//			source.getFilmId(), 
+//			source.getTitle(),
+//			source.getDescription(),
+//			source.getLength(),
+//			
+//			source.getReleaseYear(),
+//			source.getRentalDuration(),
+//			source.getRentalRate(),
+//			source.getReplacementCost(),
+//			
+//			
+//			source.getActors().stream().map(item -> item.getActorId())
+//				.collect(Collectors.toList()),
+//			source.getCategories().stream().map(item -> item.getCategoryId())
+//				.collect(Collectors.toList())
+//			);
+//}
+	
+//	public static Film from(FilmEditDTO source) {
+//		Film rslt = new Film(
+//				source.getFilmId(), 
+//				source.getDescription(),
+//				source.getLength(),				
+//				source.getReleaseYear(),				
+//				source.getRentalDuration(),
+//				source.getRentalRate(),
+//				source.getReplacementCost(),
+//				source.getTitle()				
+//				);
+//		source.getActors().stream().forEach(item -> rslt.addActor(item));
+//		source.getCategories().stream().forEach(item -> rslt.addCategory(item));
+//	
+//		return rslt;
+//	}
 	
 }

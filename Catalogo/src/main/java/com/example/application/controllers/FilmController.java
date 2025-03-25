@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domain.contracts.service.FilmService;
 import com.example.domain.entities.dto.FilmDTO;
+import com.example.domain.entities.dto.FilmEditDTO;
 import com.example.domain.entities.dto.FilmShort;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
@@ -110,25 +111,15 @@ public class FilmController {
 		return ResponseEntity.created(location).build();
 	}
 	
-	/*
-	 * {
-		  "id": 0,
-		  
-		  "description": "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies",
-		  "lastUpdate": "2025-03-21T10:53:37Z",
-		  "length": 86,
-		  "releaseYear": 2006,
-		  "rentalDuration": 6,
-		  "rentalRate": 0.99,
-		  "replacementCost": 20.99,
-		  "title": "ACADEMY",
-		  "idioma_traduccion": {
-		    "languageId": 1,
-		    "name": "English"
-		  },
-		  "idioma_original": null
-	}*/
-
+//	@PostMapping
+//	@ApiResponse(responseCode="201", description="Película creada")
+//	public ResponseEntity<Object> create(@Valid @RequestBody FilmEditDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+//		var newItem = srv.add(FilmEditDTO.from(item));
+//		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+//			.buildAndExpand(newItem.getFilmId()).toUri();
+//		return ResponseEntity.created(location).build();
+//	}
+	
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update(@PathVariable int id, @Valid @RequestBody FilmDTO item) throws BadRequestException, ItemNotFoundException, InvalidDataException {
