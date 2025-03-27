@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplos curso</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="txtNombre" placeholder="Nombre" data-tipo="Adios">
+        <input type="button" value="No tocar">
+        <input type="button" value="Quitar"">
+        <output id="outSaludo"></output>
+    </div>
+    <script src="demos.js"></script>
+    <script>
+        let txt = document.querySelector('#txtNombre');
+        let btn = document.querySelector('input[type="button"]');
+        let saludar = function() {
+            document.getElementById('outSaludo').textContent = `${txt.dataset.tipo} ${txt.value}`;
+        }
+        let registro = function() {
+            console.log(`Hola ${txt.value}`);
+        }
+        // btn.onClick = saludar;
+        btn.addEventListener('click', saludar);
+        btn.addEventListener('click', registro);
+        document.querySelector('input[value="Quitar"]').addEventListener('click', function() {
+            btn.removeEventListener('click', registro);
+        });
+
+    </script>
+</body>
+</html>
