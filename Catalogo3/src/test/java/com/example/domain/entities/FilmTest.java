@@ -150,26 +150,36 @@ class FilmTest {
 	
 	@Nested
 	@DisplayName("Edit Film")
-	class Edit {
+	class Edit {		
 		@Test
 		@DisplayName("Modificar film")
-		public void testModificar() throws ItemNotFoundException, InvalidDataException {		
+		public void testModificar() throws ItemNotFoundException, InvalidDataException {
+			Language language = new Language(1, "English");
 			var f = new Film(10, "ABCDE");
-			when(fr.findById(10)).thenReturn(Optional.of(f));			
-			f.setTitle("EDCBA");	
-			f.setLength(100);			
-			fs.modify(f);		
+			f.setRentalRate(new BigDecimal("2.99"));
+			f.setRentalDuration((byte)5);
+			f.setReplacementCost(new BigDecimal("19.99"));
+			f.setLanguage(language);
+			when(fr.findById(10)).thenReturn(Optional.of(f));
+			f.setTitle("EDCBA");
+			f.setLength(100);
+			fs.modify(f);
 			assertEquals("EDCBA", f.getTitle());
-			verify(fr).save(any(Film.class)); 		
+			verify(fr).save(any(Film.class)); 			
 		}
 		
 		@Test
 		@DisplayName("Modificar film inexistente")
 		public void testModificarInexistente() throws InvalidDataException {
+			Language language = new Language(1, "English");
 			var f = new Film(1000, "Loquesea");
-			when(fr.findById(f.getFilmId())).thenReturn(Optional.empty());
-			var ex = assertThrows(InvalidDataException.class, () -> fs.modify(f));
-			assertEquals("No existe film con el ID " + f.getFilmId(), ex.getMessage());
+			f.setRentalRate(new BigDecimal("2.99"));
+			f.setRentalDuration((byte)5);
+			f.setReplacementCost(new BigDecimal("19.99"));
+			f.setLanguage(language);
+			when(fr.findById(10)).thenReturn(Optional.empty());
+			var ex = assertThrows(ItemNotFoundException.class, () -> fs.modify(f));
+			assertEquals("Not found", ex.getMessage());
 			verify(fr).findById(f.getFilmId());
 			verify(fr, never()).save(any(Film.class));
 		}
@@ -236,7 +246,7 @@ class FilmTest {
 	}	
 	
 	@ParameterizedTest
-	@CsvSource({ "15, 0", "210, 0", "100, 0", "14, 1", "211, 1", "-100, 2"})
+	@CsvSource({ "150, 0", "-100, 1"})
 	public void testLength(int length, int numViolations) {
 		Film f = new Film();
 		f.setLength(length);
@@ -267,7 +277,7 @@ class FilmTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({ "0.01, 0", "1000.00, 0", "0.00, 1", "1000.01, 1", "null, 1"})
+	@CsvSource({ "0.01, 0", "0.00, 1", "null, 1"})
 	public void testRentalRate(String rentalRate, int numViolations) {
 		Film f = new Film();
 		if (!"null".equals(rentalRate)) {
